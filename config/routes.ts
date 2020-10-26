@@ -8,7 +8,7 @@ const routes: IRoute[] = [
       {
         name: 'login',
         path: '/user/login',
-        component: './user/login',
+        component: './User/Login',
       },
     ],
   },
@@ -26,17 +26,17 @@ const routes: IRoute[] = [
       {
         path: '/allocate/label',
         name: 'allocate-label',
-        component: './allocate/label',
+        component: './Allocate/Label',
       },
       {
         path: '/allocate/review',
         name: 'allocate-review',
-        component: './allocate/review',
+        component: './Allocate/Review',
       },
       {
         path: '/allocate/refine',
         name: 'allocate-refine',
-        component: './allocate/refine',
+        component: './Allocate/Refine',
       },
     ]
   },
@@ -48,17 +48,17 @@ const routes: IRoute[] = [
       {
         path: '/annonation/label',
         name: 'annonation-label',
-        component: './annonation/label',
+        component: './Annonation/Label',
       },
       {
         path: '/annonation/review',
         name: 'annonation-review',
-        component: './annonation/review',
+        component: './Annonation/Review',
       },
       {
         path: '/annonation/refine',
         name: 'annonation-refine',
-        component: './annonation/refine',
+        component: './Annonation/Refine',
       },
     ]
   },
@@ -70,17 +70,17 @@ const routes: IRoute[] = [
       {
         path: '/model/allocate',
         name: 'model-allocate',
-        component: './model-manage/allocate',
+        component: './ModelManage/Allocate',
       },
       {
         path: '/model/train',
         name: 'model-train',
-        component: './model-manage/train',
+        component: './ModelManage/Train',
       },
       {
         path: '/model/test',
         name: 'model-test',
-        component: './model-manage/test',
+        component: './ModelManage/Test',
       },
     ]
   },
@@ -92,12 +92,12 @@ const routes: IRoute[] = [
       {
         path: '/statistic/slide',
         name: 'statistic-slide',
-        component: './statistic/slide',
+        component: './Statistic/Slide',
       },
       {
         path: '/statistic/workload',
         name: 'statistic-workload',
-        component: './statistic/workload',
+        component: './Statistic/Workload',
       },
     ]
   },
@@ -106,21 +106,21 @@ const routes: IRoute[] = [
     name: 'classification',
     icon: 'crown',
     access: 'canAdmin',
-    component: './classification',
+    component: './Classification',
   },
   {
     path: '/file',
     name: 'file',
     icon: 'crown',
     access: 'canAdmin',
-    component: './file',
+    component: './File',
   },
   {
     path: '/slide',
     name: 'slide',
     icon: 'crown',
     access: 'canAdmin',
-    component: './slide',
+    component: './Slide',
   },
   {
     path: '/system',
@@ -131,12 +131,12 @@ const routes: IRoute[] = [
       {
         path: '/system/user',
         name: 'system-user',
-        component: './system/user',
+        component: './System/User',
       },
       {
         path: '/system/slide',
         name: 'system-slide',
-        component: './system/slide',
+        component: './System/Slide',
       },
     ]
   },
