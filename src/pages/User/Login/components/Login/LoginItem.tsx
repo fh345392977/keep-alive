@@ -1,12 +1,11 @@
-import { Button, Col, Input, Row, Form, message } from 'antd';
-import React, { useState, useCallback, useEffect } from 'react';
-import omit from 'omit.js';
-import { FormItemProps } from 'antd/es/form/FormItem';
 import { getFakeCaptcha } from '@/services/login';
-
-import ItemMap from './map';
-import LoginContext, { LoginContextProps } from './LoginContext';
+import { Button, Col, Form, Input, message, Row } from 'antd';
+import { FormItemProps } from 'antd/es/form/FormItem';
+import omit from 'omit.js';
+import React, { useCallback, useEffect, useState } from 'react';
 import styles from './index.less';
+import LoginContext, { LoginContextProps } from './LoginContext';
+import ItemMap from './map';
 
 export type WrappedLoginItemProps = LoginItemProps;
 export type LoginItemKeyType = keyof typeof ItemMap;
@@ -84,9 +83,9 @@ const LoginItem: React.FC<LoginItemProps> = (props) => {
     setTiming(true);
   }, []);
 
+  const { countDown } = props;
   useEffect(() => {
     let interval: number = 0;
-    const { countDown } = props;
     if (timing) {
       interval = window.setInterval(() => {
         setCount((preSecond) => {
@@ -101,7 +100,7 @@ const LoginItem: React.FC<LoginItemProps> = (props) => {
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [timing]);
+  }, [timing, countDown]);
 
   if (!name) {
     return null;
