@@ -1,12 +1,11 @@
-import React from 'react';
+import RightContent from '@/components/RightContent';
 import { BasicLayoutProps, Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { notification } from 'antd';
+import React from 'react';
 import { history, RequestConfig } from 'umi';
-import RightContent from '@/components/RightContent';
-import Footer from '@/components/Footer';
 import { ResponseError } from 'umi-request';
-import { queryCurrent } from './services/user';
 import defaultSettings from '../config/defaultSettings';
+import { queryCurrent } from './services/user';
 
 export async function getInitialState(): Promise<{
   settings?: LayoutSettings;
@@ -23,6 +22,8 @@ export async function getInitialState(): Promise<{
     return undefined;
   };
   // 如果是登录页面，不执行
+  // 每次刷新会从这里重新获取用户信息
+  // 也可以再加上权限获取，虽然觉得可以放在一个接口
   if (history.location.pathname !== '/user/login') {
     const currentUser = await fetchUserInfo();
     return {
@@ -45,7 +46,6 @@ export const layout = ({
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
-    footerRender: () => <Footer />,
     onPageChange: () => {
       const { currentUser } = initialState;
       const { location } = history;
