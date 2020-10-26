@@ -1,9 +1,10 @@
 import { PlusOutlined } from '@ant-design/icons';
 import ProDescriptions from '@ant-design/pro-descriptions';
-import { FooterToolbar, PageContainer } from '@ant-design/pro-layout';
+import { FooterToolbar } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, Divider, Drawer, Input, message } from 'antd';
-import React, { useRef, useState } from 'react';
+import { FormInstance } from 'antd/lib/form';
+import React, { useEffect, useRef, useState } from 'react';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { TableListItem } from './data.d';
@@ -75,9 +76,45 @@ const TableList: React.FC<{}> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
+  const [collapsed, setCollapsed] = useState(true);
   const actionRef = useRef<ActionType>();
+  const formRef = useRef<FormInstance>();
+  const tableWrapperRef = useRef<HTMLDivElement>(null);
   const [row, setRow] = useState<TableListItem>();
   const [selectedRowsState, setSelectedRows] = useState<TableListItem[]>([]);
+  const [scrollY, setScrollY] = useState<number>(0);
+  const [wrapperH, setWrapperH] = useState<string>('100%');
+
+  // 根据页面高度动态设置表格垂直出现滚动的高度
+  useEffect(() => {
+    if (tableWrapperRef.current) {
+      setScrollY((preScrollY) => {
+        const headerForm = document.querySelector('.ant-pro-table-search');
+        const tableAction = document.querySelector('.ant-pro-table-list-toolbar');
+        if (tableWrapperRef.current) {
+          const wrapperHeight = tableWrapperRef.current.getBoundingClientRect().height;
+          const headerFormHeight = headerForm!.getBoundingClientRect().height;
+          const tableActionHeight = tableAction!.getBoundingClientRect().height;
+          setWrapperH(`${wrapperHeight}px`);
+          console.log('wrapperHeight', wrapperHeight);
+          console.log('headerFormHeight', headerFormHeight);
+          console.log('tableActionHeight', tableActionHeight);
+          const headerFormMargin = 16;
+          const tableHeader = 48;
+          const tablePage = 56;
+          const nextScrollY =
+            wrapperHeight -
+            headerFormHeight -
+            headerFormMargin -
+            tableActionHeight -
+            tableHeader -
+            tablePage;
+          return nextScrollY;
+        }
+        return preScrollY;
+      });
+    }
+  }, [tableWrapperRef, formRef, collapsed]);
   const columns: ProColumns<TableListItem>[] = [
     {
       title: '规则名称',
@@ -155,15 +192,21 @@ const TableList: React.FC<{}> = () => {
       ),
     },
   ];
-
   return (
-    <PageContainer>
+    <div ref={tableWrapperRef} style={{ height: wrapperH }}>
       <ProTable<TableListItem>
-        headerTitle="查询表格"
         actionRef={actionRef}
+        formRef={formRef}
         rowKey="key"
+        sticky
+        scroll={{
+          scrollToFirstRowOnChange: true,
+          y: scrollY,
+        }}
         search={{
           labelWidth: 120,
+          collapsed,
+          onCollapse: (val) => setCollapsed(val),
         }}
         toolBarRender={() => [
           <Button key="create" type="primary" onClick={() => handleModalVisible(true)}>
@@ -258,7 +301,7 @@ const TableList: React.FC<{}> = () => {
           />
         )}
       </Drawer>
-    </PageContainer>
+    </div>
   );
 };
 

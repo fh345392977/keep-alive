@@ -1,7 +1,6 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import Allocate from './Allocate';
 
 export default () => {
-  const location = useLocation();
-  return <div>label-{location.pathname}</div>;
+  return <Allocate status="label"/>;
 };
