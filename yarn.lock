@@ -140,7 +140,7 @@
     use-media-antd-query "^1.0.3"
     warning "^4.0.3"
 
-"@ant-design/pro-provider@1.0.1":
+"@ant-design/pro-provider@1.0.1", "@ant-design/pro-provider@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@ant-design/pro-provider/-/pro-provider-1.0.1.tgz#f357231c79c571c9d911d73a2411088edad05fb5"
   integrity sha512-FU533zy7+vnnp+8oN5RjPtlrgi8P0XRkOXtOhSfO63v+TJ15LltMhV5AP/nTHWCsMFh/MWqNLclJmHdOW5QUzQ==

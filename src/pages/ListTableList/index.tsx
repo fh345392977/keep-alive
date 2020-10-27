@@ -4,7 +4,8 @@ import { FooterToolbar } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, Divider, Drawer, Input, message } from 'antd';
 import { FormInstance } from 'antd/lib/form';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
+import AutoHeightProTable from '@/components/AutoHeightProTable';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { TableListItem } from './data.d';
@@ -76,40 +77,11 @@ const TableList: React.FC<{}> = () => {
   const [createModalVisible, handleModalVisible] = useState<boolean>(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
-  const [collapsed, setCollapsed] = useState(true);
   const actionRef = useRef<ActionType>();
   const formRef = useRef<FormInstance>();
-  const wrapperRef = useRef<HTMLDivElement>(null);
   const [row, setRow] = useState<TableListItem>();
   const [selectedRowsState, setSelectedRows] = useState<TableListItem[]>([]);
-  const [scrollY, setScrollY] = useState<number>(0);
-  const [wrapperH, setWrapperH] = useState<string>('100%');
 
-  // 根据页面高度动态设置表格垂直出现滚动的高度
-  useEffect(() => {
-    if (wrapperRef.current) {
-      const headerForm = wrapperRef.current.querySelector('.ant-pro-table-search');
-      const tableHead = wrapperRef.current.querySelector('.ant-table-thead');
-      const tableAction = wrapperRef.current.querySelector('.ant-pro-table-list-toolbar');
-      const wrapperHeight = wrapperRef.current.getBoundingClientRect().height;
-      setWrapperH(`${wrapperHeight}px`);
-      let nextScrollY = wrapperHeight;
-      // TODO: 增加 showHeader判断 计算
-      if (tableHead) {
-        // TODO: 增加 是否显示分页 计算,显示的话给固定值
-        nextScrollY -= (tableHead.getBoundingClientRect().height + 56);
-      }
-      if (headerForm) {
-        const headerFormMargin = 16;
-        const headerFormHeight = headerForm.getBoundingClientRect().height;
-        nextScrollY -= (headerFormMargin + headerFormHeight);
-      }
-      if (tableAction) {
-        nextScrollY -= tableAction.getBoundingClientRect().height;
-      }
-      setScrollY(nextScrollY);
-    }
-  }, [wrapperRef, formRef, collapsed]);
   const columns: ProColumns<TableListItem>[] = [
     {
       title: '规则名称',
@@ -188,20 +160,14 @@ const TableList: React.FC<{}> = () => {
     },
   ];
   return (
-    <div ref={wrapperRef} style={{ height: wrapperH }}>
-      <ProTable<TableListItem>
+    <>
+      <AutoHeightProTable<TableListItem>
         actionRef={actionRef}
         formRef={formRef}
         rowKey="key"
         sticky
-        scroll={{
-          scrollToFirstRowOnChange: true,
-          y: scrollY,
-        }}
         search={{
           labelWidth: 120,
-          collapsed,
-          onCollapse: (val) => setCollapsed(val),
         }}
         toolBarRender={() => [
           <Button key="create" type="primary" onClick={() => handleModalVisible(true)}>
@@ -296,7 +262,7 @@ const TableList: React.FC<{}> = () => {
           />
         )}
       </Drawer>
-    </div>
+    </>
   );
 };
 
