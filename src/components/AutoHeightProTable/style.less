@@ -1,0 +1,20 @@
+@import '~antd/es/style/themes/default.less';
+
+.wrapper {
+  height: 100%;
+  background-color: @layout-body-background;
+  :global {
+    .ant-pro-table-column-setting-list-item-option {
+      display: block;
+      z-index: -1;
+    }
+    .ant-pro-table-column-setting-list-item {
+      padding-right: 8px;
+      &:hover {
+        .ant-pro-table-column-setting-list-item-option {
+          z-index: 1;
+        }
+      }
+    }
+  }
+}
