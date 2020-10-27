@@ -79,7 +79,7 @@ const TableList: React.FC<{}> = () => {
   const [collapsed, setCollapsed] = useState(true);
   const actionRef = useRef<ActionType>();
   const formRef = useRef<FormInstance>();
-  const tableWrapperRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const [row, setRow] = useState<TableListItem>();
   const [selectedRowsState, setSelectedRows] = useState<TableListItem[]>([]);
   const [scrollY, setScrollY] = useState<number>(0);
@@ -87,34 +87,29 @@ const TableList: React.FC<{}> = () => {
 
   // 根据页面高度动态设置表格垂直出现滚动的高度
   useEffect(() => {
-    if (tableWrapperRef.current) {
-      setScrollY((preScrollY) => {
-        const headerForm = document.querySelector('.ant-pro-table-search');
-        const tableAction = document.querySelector('.ant-pro-table-list-toolbar');
-        if (tableWrapperRef.current) {
-          const wrapperHeight = tableWrapperRef.current.getBoundingClientRect().height;
-          const headerFormHeight = headerForm!.getBoundingClientRect().height;
-          const tableActionHeight = tableAction!.getBoundingClientRect().height;
-          setWrapperH(`${wrapperHeight}px`);
-          console.log('wrapperHeight', wrapperHeight);
-          console.log('headerFormHeight', headerFormHeight);
-          console.log('tableActionHeight', tableActionHeight);
-          const headerFormMargin = 16;
-          const tableHeader = 48;
-          const tablePage = 56;
-          const nextScrollY =
-            wrapperHeight -
-            headerFormHeight -
-            headerFormMargin -
-            tableActionHeight -
-            tableHeader -
-            tablePage;
-          return nextScrollY;
-        }
-        return preScrollY;
-      });
+    if (wrapperRef.current) {
+      const headerForm = wrapperRef.current.querySelector('.ant-pro-table-search');
+      const tableHead = wrapperRef.current.querySelector('.ant-table-thead');
+      const tableAction = wrapperRef.current.querySelector('.ant-pro-table-list-toolbar');
+      const wrapperHeight = wrapperRef.current.getBoundingClientRect().height;
+      setWrapperH(`${wrapperHeight}px`);
+      let nextScrollY = wrapperHeight;
+      // TODO: 增加 showHeader判断 计算
+      if (tableHead) {
+        // TODO: 增加 是否显示分页 计算,显示的话给固定值
+        nextScrollY -= (tableHead.getBoundingClientRect().height + 56);
+      }
+      if (headerForm) {
+        const headerFormMargin = 16;
+        const headerFormHeight = headerForm.getBoundingClientRect().height;
+        nextScrollY -= (headerFormMargin + headerFormHeight);
+      }
+      if (tableAction) {
+        nextScrollY -= tableAction.getBoundingClientRect().height;
+      }
+      setScrollY(nextScrollY);
     }
-  }, [tableWrapperRef, formRef, collapsed]);
+  }, [wrapperRef, formRef, collapsed]);
   const columns: ProColumns<TableListItem>[] = [
     {
       title: '规则名称',
@@ -193,7 +188,7 @@ const TableList: React.FC<{}> = () => {
     },
   ];
   return (
-    <div ref={tableWrapperRef} style={{ height: wrapperH }}>
+    <div ref={wrapperRef} style={{ height: wrapperH }}>
       <ProTable<TableListItem>
         actionRef={actionRef}
         formRef={formRef}
