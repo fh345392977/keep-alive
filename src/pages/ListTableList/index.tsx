@@ -8,14 +8,14 @@ import React, { useRef, useState } from 'react';
 import AutoHeightProTable from '@/components/AutoHeightProTable';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
-import { TableListItem } from './data.d';
+import { RuleLog } from './data.d';
 import { addRule, queryRule, removeRule, updateRule } from './service';
 
 /**
  * 添加节点
  * @param fields
  */
-const handleAdd = async (fields: TableListItem) => {
+const handleAdd = async (fields: RuleLog) => {
   const hide = message.loading('正在添加');
   try {
     await addRule({ ...fields });
@@ -56,7 +56,7 @@ const handleUpdate = async (fields: FormValueType) => {
  *  删除节点
  * @param selectedRows
  */
-const handleRemove = async (selectedRows: TableListItem[]) => {
+const handleRemove = async (selectedRows: RuleLog[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
@@ -79,10 +79,10 @@ const TableList: React.FC<{}> = () => {
   const [stepFormValues, setStepFormValues] = useState({});
   const actionRef = useRef<ActionType>();
   const formRef = useRef<FormInstance>();
-  const [row, setRow] = useState<TableListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<TableListItem[]>([]);
+  const [row, setRow] = useState<RuleLog>();
+  const [selectedRowsState, setSelectedRows] = useState<RuleLog[]>([]);
 
-  const columns: ProColumns<TableListItem>[] = [
+  const columns: ProColumns<RuleLog>[] = [
     {
       title: '规则名称',
       dataIndex: 'name',
@@ -161,7 +161,7 @@ const TableList: React.FC<{}> = () => {
   ];
   return (
     <>
-      <AutoHeightProTable<TableListItem>
+      <AutoHeightProTable<RuleLog>
         actionRef={actionRef}
         formRef={formRef}
         rowKey="key"
@@ -204,7 +204,7 @@ const TableList: React.FC<{}> = () => {
         </FooterToolbar>
       )}
       <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}>
-        <ProTable<TableListItem, TableListItem>
+        <ProTable<RuleLog, RuleLog>
           onSubmit={async (value) => {
             const success = await handleAdd(value);
             if (success) {
@@ -249,7 +249,7 @@ const TableList: React.FC<{}> = () => {
         closable={false}
       >
         {row?.name && (
-          <ProDescriptions<TableListItem>
+          <ProDescriptions<RuleLog>
             column={2}
             title={row?.name}
             request={async () => ({

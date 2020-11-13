@@ -1,16 +1,25 @@
-export interface TableListItem {
-  key: number;
-  disabled?: boolean;
-  href: string;
-  avatar: string;
-  name: string;
-  owner: string;
-  desc: string;
-  callNo: number;
-  status: number;
+class RuleLog {
+  key: number = 0;
+
+  disabled: boolean = false;
+
+  href: string = '';
+
+  name: string = '';
+
+  owner: string = '';
+
+  desc: string = '';
+
+  callNo: number = 0;
+
+  status: number = 0;
+
   updatedAt: Date;
+
   createdAt: Date;
-  progress: number;
+
+  progress: number = 0;
 }
 
 export interface TableListPagination {
@@ -20,7 +29,7 @@ export interface TableListPagination {
 }
 
 export interface TableListData {
-  list: TableListItem[];
+  list: RuleLog[];
   pagination: Partial<TableListPagination>;
 }
 

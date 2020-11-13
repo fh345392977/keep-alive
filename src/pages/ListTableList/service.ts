@@ -1,5 +1,5 @@
 import { request } from 'umi';
-import { TableListParams, TableListItem } from './data.d';
+import { TableListParams, RuleLog } from './data.d';
 
 export async function queryRule(params?: TableListParams) {
   return request('/api/rule', {
@@ -17,7 +17,7 @@ export async function removeRule(params: { key: number[] }) {
   });
 }
 
-export async function addRule(params: TableListItem) {
+export async function addRule(params: RuleLog) {
   return request('/api/rule', {
     method: 'POST',
     data: {

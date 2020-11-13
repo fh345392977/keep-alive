@@ -1,4 +1,5 @@
 import { Button, message, notification } from 'antd';
+import 'reflect-metadata';
 
 import React from 'react';
 import { useIntl } from 'umi';

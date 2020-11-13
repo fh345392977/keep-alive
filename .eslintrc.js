@@ -11,5 +11,9 @@ module.exports = {
     'import/no-unresolved': 0,
     'react-hooks/rules-of-hooks': 'error', // 检查 Hook 的规则
     'react-hooks/exhaustive-deps': 'warn', // 检查 effect 的依赖
+    'func-names': 0,
+    'no-underscore-dangle': 0,
+    'no-console': 0,
+    'no-useless-escape': 0,
   },
 };
