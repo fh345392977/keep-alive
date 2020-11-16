@@ -26,11 +26,6 @@ export default class RuleLog extends Base {
   })
   name: string = '';
 
-  @Column({
-    title: '描述',
-    dataIndex: 'desc',
-    valueType: 'textarea',
-  })
   owner: string = '';
 
   @Column({
