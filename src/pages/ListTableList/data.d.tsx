@@ -1,5 +1,7 @@
 import { Column, MetaEnhancedClass } from '@/metadata/utils';
 import { Base } from '@/metadata/base';
+import React from 'react';
+import { Input } from 'antd';
 
 @MetaEnhancedClass()
 export default class RuleLog extends Base {
@@ -66,10 +68,20 @@ export default class RuleLog extends Base {
     sorter: true,
     valueType: 'dateTime',
     hideInForm: true,
+    renderFormItem: (item, { defaultRender, ...rest }, form) => {
+      const status = form.getFieldValue('status');
+      if (`${status}` === '0') {
+        return false;
+      }
+      if (`${status}` === '3') {
+        return <Input {...rest} placeholder="请输入异常原因！" />;
+      }
+      return defaultRender(item);
+    },
   })
-  updatedAt: Date;
+  updatedAt: Date = new Date();
 
-  createdAt: Date;
+  createdAt: Date = new Date();
 
   progress: number = 0;
 }

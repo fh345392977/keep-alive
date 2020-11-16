@@ -7,8 +7,14 @@ import { TableListBaseParams, TableListData } from './pagination';
  * offer types
  */
 export abstract class Base {
-  static getColumns<T>(): ProColumns<T>[] {
+  static getColumns<T>(
+    extra: Map<Extract<keyof T, string>, ProColumns<T>> = new Map(),
+  ): ProColumns<T>[] {
     return [];
+  }
+
+  static getDesignatedColumns<T>(prop: Extract<keyof T, string>): ProColumns<T> {
+    return {};
   }
 
   static async getList<T>(params: TableListBaseParams): Promise<TableListData<T>> {

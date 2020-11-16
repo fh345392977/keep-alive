@@ -55,14 +55,24 @@ export function MetaEnhancedClass(): any {
       }
 
       /**
+       * get 指定的字段的 colum
+       */
+      static getDesignatedColumns<T>(prop: Extract<keyof T, string>): ProColumns<T> {
+        return EnhancedClass.columnConfig.get(prop) as ProColumns<T>;
+      }
+
+      /**
        * get table colums
        */
-      static getColumns<T>(): ProColumns<T>[] {
+      static getColumns<T>(
+        extra: Map<Extract<keyof T, string>, ProColumns<T>> = new Map(),
+      ): ProColumns<T>[] {
         const list: ProColumns<T>[] = [];
         EnhancedClass.columnConfig.forEach((config, key) => {
           list.push({
             key,
             ...config,
+            ...(extra.get(key as Extract<keyof T, string>) || {}),
           });
         });
 

@@ -81,8 +81,18 @@ const TableList: React.FC<{}> = () => {
   const formRef = useRef<FormInstance>();
   const [row, setRow] = useState<RuleLog>();
   const [selectedRowsState, setSelectedRows] = useState<RuleLog[]>([]);
-  const defaultColumns = RuleLog.getColumns<RuleLog>();
+  const extraColumnMap = new Map<Extract<keyof RuleLog, string>, ProColumns<RuleLog>>();
+  extraColumnMap.set('name', {
+    render: (dom, entity) => {
+      return <a onClick={() => setRow(entity)}>{dom}</a>;
+    },
+  });
+  const defaultColumns = RuleLog.getColumns<RuleLog>(extraColumnMap);
   const columns: ProColumns<RuleLog>[] = [
+    // {
+    //   ...RuleLog.getDesignatedColumns('name'),
+
+    // },
     // {
     //   title: '规则名称',
     //   dataIndex: 'name',
@@ -128,16 +138,16 @@ const TableList: React.FC<{}> = () => {
     //   sorter: true,
     //   valueType: 'dateTime',
     //   hideInForm: true,
-    //   renderFormItem: (item, { defaultRender, ...rest }, form) => {
-    //     const status = form.getFieldValue('status');
-    //     if (`${status}` === '0') {
-    //       return false;
-    //     }
-    //     if (`${status}` === '3') {
-    //       return <Input {...rest} placeholder="请输入异常原因！" />;
-    //     }
-    //     return defaultRender(item);
-    //   },
+    // renderFormItem: (item, { defaultRender, ...rest }, form) => {
+    //   const status = form.getFieldValue('status');
+    //   if (`${status}` === '0') {
+    //     return false;
+    //   }
+    //   if (`${status}` === '3') {
+    //     return <Input {...rest} placeholder="请输入异常原因！" />;
+    //   }
+    //   return defaultRender(item);
+    // },
     // },
     ...defaultColumns,
     {
