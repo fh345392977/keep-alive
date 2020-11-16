@@ -2,13 +2,13 @@ import { PlusOutlined } from '@ant-design/icons';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import { FooterToolbar } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { Button, Divider, Drawer, Input, message } from 'antd';
+import { Button, Divider, Drawer, message } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import React, { useRef, useState } from 'react';
 import AutoHeightProTable from '@/components/AutoHeightProTable';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
-import { RuleLog } from './data.d';
+import RuleLog from './data.d';
 import { addRule, queryRule, removeRule, updateRule } from './service';
 
 /**
@@ -81,64 +81,65 @@ const TableList: React.FC<{}> = () => {
   const formRef = useRef<FormInstance>();
   const [row, setRow] = useState<RuleLog>();
   const [selectedRowsState, setSelectedRows] = useState<RuleLog[]>([]);
-
+  const defaultColumns = RuleLog.getColumns<RuleLog>();
   const columns: ProColumns<RuleLog>[] = [
-    {
-      title: '规则名称',
-      dataIndex: 'name',
-      tip: '规则名称是唯一的 key',
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: '规则名称为必填项',
-          },
-        ],
-      },
-      render: (dom, entity) => {
-        return <a onClick={() => setRow(entity)}>{dom}</a>;
-      },
-    },
-    {
-      title: '描述',
-      dataIndex: 'desc',
-      valueType: 'textarea',
-    },
-    {
-      title: '服务调用次数',
-      dataIndex: 'callNo',
-      sorter: true,
-      hideInForm: true,
-      renderText: (val: string) => `${val} 万`,
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      hideInForm: true,
-      valueEnum: {
-        0: { text: '关闭', status: 'Default' },
-        1: { text: '运行中', status: 'Processing' },
-        2: { text: '已上线', status: 'Success' },
-        3: { text: '异常', status: 'Error' },
-      },
-    },
-    {
-      title: '上次调度时间',
-      dataIndex: 'updatedAt',
-      sorter: true,
-      valueType: 'dateTime',
-      hideInForm: true,
-      renderFormItem: (item, { defaultRender, ...rest }, form) => {
-        const status = form.getFieldValue('status');
-        if (`${status}` === '0') {
-          return false;
-        }
-        if (`${status}` === '3') {
-          return <Input {...rest} placeholder="请输入异常原因！" />;
-        }
-        return defaultRender(item);
-      },
-    },
+    // {
+    //   title: '规则名称',
+    //   dataIndex: 'name',
+    //   tip: '规则名称是唯一的 key',
+    //   formItemProps: {
+    //     rules: [
+    //       {
+    //         required: true,
+    //         message: '规则名称为必填项',
+    //       },
+    //     ],
+    //   },
+    //   render: (dom, entity) => {
+    //     return <a onClick={() => setRow(entity)}>{dom}</a>;
+    //   },
+    // },
+    // {
+    //   title: '描述',
+    //   dataIndex: 'desc',
+    //   valueType: 'textarea',
+    // },
+    // {
+    //   title: '服务调用次数',
+    //   dataIndex: 'callNo',
+    //   sorter: true,
+    //   hideInForm: true,
+    //   renderText: (val: string) => `${val} 万`,
+    // },
+    // {
+    //   title: '状态',
+    //   dataIndex: 'status',
+    //   hideInForm: true,
+    //   valueEnum: {
+    //     0: { text: '关闭', status: 'Default' },
+    //     1: { text: '运行中', status: 'Processing' },
+    //     2: { text: '已上线', status: 'Success' },
+    //     3: { text: '异常', status: 'Error' },
+    //   },
+    // },
+    // {
+    //   title: '上次调度时间',
+    //   dataIndex: 'updatedAt',
+    //   sorter: true,
+    //   valueType: 'dateTime',
+    //   hideInForm: true,
+    //   renderFormItem: (item, { defaultRender, ...rest }, form) => {
+    //     const status = form.getFieldValue('status');
+    //     if (`${status}` === '0') {
+    //       return false;
+    //     }
+    //     if (`${status}` === '3') {
+    //       return <Input {...rest} placeholder="请输入异常原因！" />;
+    //     }
+    //     return defaultRender(item);
+    //   },
+    // },
+    ...defaultColumns,
     {
       title: '操作',
       dataIndex: 'option',

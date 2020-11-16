@@ -154,7 +154,7 @@ export function MetaEnhancedClass(): any {
         Object.keys(this).forEach((key) => {
           const config: TypePropertyConfig = Reflect.getMetadata(typeConfig.metaKey, this, key);
           console.log(config);
-          if (config.handle) {
+          if (config && config.handle) {
             if (typeof config.handle === 'string') {
               this[key] = data[config.handle];
             } else {
