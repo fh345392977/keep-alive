@@ -1,4 +1,5 @@
 import {
+  ColumnMap,
   ColumnPropertyConfig,
   CreateProperDecoratorF,
   FormItemConfigType,
@@ -64,9 +65,7 @@ export function MetaEnhancedClass(): any {
       /**
        * get table colums
        */
-      static getColumns<T>(
-        extra: Map<Extract<keyof T, string>, ProColumns<T>> = new Map(),
-      ): ProColumns<T>[] {
+      static getColumns<T>(extra: ColumnMap<T> = new ColumnMap()): ProColumns<T>[] {
         const list: ProColumns<T>[] = [];
         EnhancedClass.columnConfig.forEach((config, key) => {
           list.push({
@@ -82,7 +81,7 @@ export function MetaEnhancedClass(): any {
       [cacheTypeConfigkey]: Map<string, FormPropertyConfig> | null;
 
       /**
-       * table column config
+       * 表单 config
        */
       static get formConfig(): Map<string, FormPropertyConfig> {
         return getConfigMap<FormPropertyConfig>(
@@ -140,7 +139,7 @@ export function MetaEnhancedClass(): any {
           if (item.hasOwnProperty(key) && EnhancedClass.formConfig.get(key)) {
             data = {
               ...data,
-              ...(EnhancedClass.formConfig.get(key)!.handleSubmitData
+              ...(EnhancedClass.formConfig.get(key)?.handleSubmitData
                 ? EnhancedClass.formConfig.get(key)!.handleSubmitData!(item, key)
                 : {
                     [key]: item[key] || '',

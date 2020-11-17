@@ -3,9 +3,9 @@ import ProDescriptions from '@ant-design/pro-descriptions';
 import { FooterToolbar } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Button, Drawer, message } from 'antd';
-import { FormInstance } from 'antd/lib/form';
 import React, { useRef, useState } from 'react';
 import AutoHeightProTable from '@/components/AutoHeightProTable';
+import { ColumnMap } from '@/metadata/meta';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import RuleLog from './data.d';
@@ -78,10 +78,9 @@ const TableList: React.FC<{}> = () => {
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
   const actionRef = useRef<ActionType>();
-  const formRef = useRef<FormInstance>();
   const [row, setRow] = useState<RuleLog>();
   const [selectedRowsState, setSelectedRows] = useState<RuleLog[]>([]);
-  const extraColumnMap = new Map<Extract<keyof RuleLog, string>, ProColumns<RuleLog>>();
+  const extraColumnMap = new ColumnMap<RuleLog>();
   extraColumnMap.set('name', {
     render: (dom, entity) => {
       return <a onClick={() => setRow(entity)}>{dom}</a>;
@@ -112,7 +111,6 @@ const TableList: React.FC<{}> = () => {
     <>
       <AutoHeightProTable<RuleLog>
         actionRef={actionRef}
-        formRef={formRef}
         rowKey="key"
         dynamicHeight={selectedRowsState?.length > 0 ? 99 : 0}
         sticky

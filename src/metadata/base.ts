@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ProColumns } from '@ant-design/pro-table';
-import { FormItemConfigType } from './meta';
+import { ColumnMap, FormItemConfigType } from './meta';
 import { TableListBaseParams, TableListData } from './pagination';
 
 /**
  * offer types
  */
 export abstract class Base {
-  static getColumns<T>(
-    extra: Map<Extract<keyof T, string>, ProColumns<T>> = new Map(),
-  ): ProColumns<T>[] {
+  static getColumns<T>(extra: ColumnMap<T> = new ColumnMap()): ProColumns<T>[] {
     return [];
   }
 

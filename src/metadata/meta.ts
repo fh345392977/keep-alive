@@ -10,12 +10,15 @@ export function CreateProperDecoratorF<T>() {
   return { metaKey, properDecoratorF };
 }
 
-export type ServerHandle = (data: any, key: string) => any;
+type ServerHandle = (data: any, key: string) => any;
 
 export interface TypePropertyConfig {
   handle?: string | ServerHandle;
 }
 export type ColumnPropertyConfig = Partial<ProColumns<any>>;
+
+export class ColumnMap<T> extends Map<Extract<keyof T, string>, Partial<ProColumns<T>>> {}
+
 export interface FormPropertyConfig {
   validationSchema?: any;
   label?: string;

@@ -54,7 +54,7 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
       }
       setScrollY(nextScrollY);
     }
-  }, [wrapperRef, formRef, collapsed, showHeader, pagination, isFullscreen, height, dynamicHeight]);
+  }, [wrapperRef, collapsed, formRef, showHeader, pagination, isFullscreen, height, dynamicHeight]);
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
       <ProTable<T, U>
