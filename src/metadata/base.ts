@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ProColumns } from '@ant-design/pro-table';
-import { ColumnMap, FormItemConfigType } from './meta';
+import { ColumnMap, FormikItemConfigType } from './meta';
 import { TableListBaseParams, TableListData } from './pagination';
 
 /**
@@ -11,7 +11,7 @@ export abstract class Base {
     return [];
   }
 
-  static getDesignatedColumns<T>(prop: Extract<keyof T, string>): ProColumns<T> {
+  static getDesignatedColumn<T>(prop: Extract<keyof T, string>): ProColumns<T> {
     return {};
   }
 
@@ -19,12 +19,12 @@ export abstract class Base {
     return { total: 0, list: [] };
   }
 
-  static getFormInitValues<T>(item?: T): Partial<T> {
+  static getFormikInitValues<T>(item?: T): Partial<T> {
     return {};
   }
 
-  static getFormItemConfig<T>(overwriteConfig?: { [key: string]: any }): FormItemConfigType<T> {
-    return {} as FormItemConfigType<T>;
+  static getFormikItemConfig<T>(overwriteConfig?: { [key: string]: any }): FormikItemConfigType<T> {
+    return {} as FormikItemConfigType<T>;
   }
 
   static handleToFormData<T>(item: T) {}

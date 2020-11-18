@@ -40,6 +40,7 @@ export default class RuleLog extends Base {
     dataIndex: 'callNo',
     sorter: true,
     hideInForm: true,
+    show: false,
     renderText: (val: string) => `${val} 万`,
   })
   callNo: number = 0;

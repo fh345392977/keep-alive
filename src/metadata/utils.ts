@@ -2,8 +2,8 @@ import {
   ColumnMap,
   ColumnPropertyConfig,
   CreateProperDecoratorF,
-  FormItemConfigType,
-  FormPropertyConfig,
+  FormikItemConfigType,
+  FormikPropertyConfig,
   TypePropertyConfig,
 } from '@/metadata/meta';
 import { ProColumns } from '@ant-design/pro-table';
@@ -34,12 +34,12 @@ const typeConfig = CreateProperDecoratorF<TypePropertyConfig>();
 export const Type = typeConfig.properDecoratorF;
 const columnConfig = CreateProperDecoratorF<ColumnPropertyConfig>();
 export const Column = columnConfig.properDecoratorF;
-const formItemConfig = CreateProperDecoratorF<FormPropertyConfig>();
-export const FormItem = formItemConfig.properDecoratorF;
+const formikItemConfig = CreateProperDecoratorF<FormikPropertyConfig>();
+export const FormikItem = formikItemConfig.properDecoratorF;
 
 export function MetaEnhancedClass(): any {
   const cacheColumnConfigKey = Symbol('cacheColumnConfigKey');
-  const cacheTypeConfigkey = Symbol('cacheTypeConfigkey');
+  const cacheFormikItemConfigkey = Symbol('cacheFormikItemConfigkey');
   return function (Target: any) {
     return class EnhancedClass extends Target {
       [cacheColumnConfigKey]: Map<string, ColumnPropertyConfig> | null;
@@ -58,7 +58,7 @@ export function MetaEnhancedClass(): any {
       /**
        * get 指定的字段的 colum
        */
-      static getDesignatedColumns<T>(prop: Extract<keyof T, string>): ProColumns<T> {
+      static getDesignatedColumn<T>(prop: Extract<keyof T, string>): ProColumns<T> {
         return EnhancedClass.columnConfig.get(prop) as ProColumns<T>;
       }
 
@@ -78,26 +78,26 @@ export function MetaEnhancedClass(): any {
         return list;
       }
 
-      [cacheTypeConfigkey]: Map<string, FormPropertyConfig> | null;
+      [cacheFormikItemConfigkey]: Map<string, FormikPropertyConfig> | null;
 
       /**
        * 表单 config
        */
-      static get formConfig(): Map<string, FormPropertyConfig> {
-        return getConfigMap<FormPropertyConfig>(
+      static get formikConfig(): Map<string, FormikPropertyConfig> {
+        return getConfigMap<FormikPropertyConfig>(
           EnhancedClass,
-          cacheTypeConfigkey,
-          formItemConfig.metaKey,
+          cacheFormikItemConfigkey,
+          formikItemConfig.metaKey,
         );
       }
 
       /**
        * get form init value
        */
-      static getFormInitValues<T extends EnhancedClass>(item?: T): Partial<T> {
+      static getFormikInitValues<T extends EnhancedClass>(item?: T): Partial<T> {
         const data: any = {};
         const _item = new EnhancedClass({});
-        EnhancedClass.formConfig.forEach((config, key) => {
+        EnhancedClass.formikConfig.forEach((config, key) => {
           if (item && key in item) {
             data[key] = item[key];
           } else if ('initValue' in config) {
@@ -109,11 +109,11 @@ export function MetaEnhancedClass(): any {
         return data as Partial<T>;
       }
 
-      static getFormItemConfig<T extends EnhancedClass>(overwriteConfig?: {
+      static getFormikItemConfig<T extends EnhancedClass>(overwriteConfig?: {
         [key: string]: any;
-      }): FormItemConfigType<T> {
+      }): FormikItemConfigType<T> {
         const formConfig: any = {};
-        EnhancedClass.formConfig.forEach((config, key) => {
+        EnhancedClass.formikConfig.forEach((config, key) => {
           formConfig[key] = {
             form: {
               label: String(config.label || key),
@@ -130,17 +130,17 @@ export function MetaEnhancedClass(): any {
             formConfig[key].handleSubmitData = config.handleSubmitData;
           }
         });
-        return formConfig as FormItemConfigType<T>;
+        return formConfig as FormikItemConfigType<T>;
       }
 
       static handleToFormData<T extends EnhancedClass>(item: T) {
         let data = {};
-        EnhancedClass.formConfig.forEach((config, key) => {
-          if (item.hasOwnProperty(key) && EnhancedClass.formConfig.get(key)) {
+        EnhancedClass.formikConfig.forEach((config, key) => {
+          if (item.hasOwnProperty(key) && EnhancedClass.formikConfig.get(key)) {
             data = {
               ...data,
-              ...(EnhancedClass.formConfig.get(key)?.handleSubmitData
-                ? EnhancedClass.formConfig.get(key)!.handleSubmitData!(item, key)
+              ...(EnhancedClass.formikConfig.get(key)?.handleSubmitData
+                ? EnhancedClass.formikConfig.get(key)!.handleSubmitData!(item, key)
                 : {
                     [key]: item[key] || '',
                   }),

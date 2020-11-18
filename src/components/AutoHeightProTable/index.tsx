@@ -1,12 +1,18 @@
 import { ParamsType } from '@ant-design/pro-provider';
-import ProTable, { ProTableProps } from '@ant-design/pro-table';
+import ProTable, { ColumnsState, ProTableProps } from '@ant-design/pro-table';
 import React, { useEffect, useRef, useState } from 'react';
 import { useFullscreen } from 'ahooks';
 import { useWindowSize } from 'react-use';
+import { ColumnPropertyConfig } from '@/metadata/meta';
 import styles from './style.less';
+
+export interface ColumnShow {
+  [key: string]: ColumnsState;
+}
 
 interface Props<T, U extends ParamsType = {}> extends ProTableProps<T, U> {
   dynamicHeight?: number;
+  columns?: ColumnPropertyConfig<T>[];
 }
 
 function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
@@ -16,12 +22,24 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
     showHeader = true,
     pagination,
     options,
+    columns,
     dynamicHeight,
     ...rests
   } = props;
   const [collapsed, setCollapsed] = useState(true);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [scrollY, setScrollY] = useState<number>(0);
+  const initColumnShow: ColumnShow = {};
+  if (columns) {
+    columns.forEach((i) => {
+      if (i.show === false) {
+        initColumnShow[i.dataIndex!.toString()] = {
+          show: false,
+        };
+      }
+    });
+  }
+  const [columnsStateMap, setColumnsStateMap] = useState<ColumnShow>(initColumnShow);
   const [isFullscreen, { toggleFull }] = useFullscreen(wrapperRef);
   const { height } = useWindowSize();
   useEffect(() => {
@@ -55,12 +73,16 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
       setScrollY(nextScrollY);
     }
   }, [wrapperRef, collapsed, formRef, showHeader, pagination, isFullscreen, height, dynamicHeight]);
+
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
       <ProTable<T, U>
         formRef={formRef}
+        columns={columns}
         showHeader={showHeader}
         pagination={pagination}
+        columnsStateMap={columnsStateMap}
+        onColumnsStateChange={(map) => setColumnsStateMap(map)}
         options={{
           fullScreen: toggleFull,
           setting: true,

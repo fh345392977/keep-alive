@@ -1,11 +1,11 @@
 import { PlusOutlined } from '@ant-design/icons';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import { FooterToolbar } from '@ant-design/pro-layout';
-import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
+import ProTable, { ActionType } from '@ant-design/pro-table';
 import { Button, Drawer, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import AutoHeightProTable from '@/components/AutoHeightProTable';
-import { ColumnMap } from '@/metadata/meta';
+import { ColumnMap, ColumnPropertyConfig } from '@/metadata/meta';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import RuleLog from './data.d';
@@ -87,7 +87,7 @@ const TableList: React.FC<{}> = () => {
     },
   });
   const defaultColumns = RuleLog.getColumns<RuleLog>(extraColumnMap);
-  const columns: ProColumns<RuleLog>[] = [
+  const columns: ColumnPropertyConfig<RuleLog>[] = [
     ...defaultColumns,
     {
       title: '操作',

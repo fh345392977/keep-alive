@@ -55,6 +55,7 @@
     "ahooks": "^2.7.1",
     "antd": "^4.7.0",
     "classnames": "^2.2.6",
+    "formik": "^2.2.5",
     "lodash": "^4.17.11",
     "moment": "^2.25.3",
     "omit.js": "^2.0.2",
@@ -67,7 +68,8 @@
     "reflect-metadata": "^0.1.13",
     "umi": "^3.2.14",
     "umi-request": "^1.0.8",
-    "use-merge-value": "^1.0.1"
+    "use-merge-value": "^1.0.1",
+    "yup": "^0.29.3"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^2.0.2",
