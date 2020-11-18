@@ -9,7 +9,7 @@ import {
   ProFormDateTimePicker,
 } from '@ant-design/pro-form';
 
-import RuleLog from '../data.d';
+import RuleLog from '@/model/RuleLog';
 
 export interface FormValueType extends Partial<RuleLog> {
   target?: string;

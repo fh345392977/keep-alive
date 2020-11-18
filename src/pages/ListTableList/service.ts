@@ -1,6 +1,16 @@
 import { request } from 'umi';
-import RuleLog, { TableListParams } from './data.d';
+import RuleLog from '@/model/RuleLog';
 
+interface TableListParams {
+  status?: string;
+  name?: string;
+  desc?: string;
+  key?: number;
+  pageSize?: number;
+  currentPage?: number;
+  filter?: { [key: string]: any[] };
+  sorter?: { [key: string]: any };
+}
 export async function queryRule(params?: TableListParams) {
   return request('/api/rule', {
     params,
