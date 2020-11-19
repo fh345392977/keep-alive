@@ -7,6 +7,8 @@ import { TableListBaseParams, TableListData } from './pagination';
  * offer types
  */
 export abstract class Base {
+  static extraXcrollX: number;
+
   static getColumns<T>(extra: ColumnMap<T> = new ColumnMap()): ProColumns<T>[] {
     return [];
   }

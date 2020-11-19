@@ -8,6 +8,7 @@ import {
 } from '@/metadata/meta';
 import { ProColumns } from '@ant-design/pro-table';
 import { request } from 'umi';
+import * as Lodash from 'lodash';
 import { TableListBaseParams, TableListData } from './pagination';
 
 export interface ConstructableFunction {
@@ -162,16 +163,19 @@ export function MetaEnhancedClass(): any {
         super(data);
         Object.keys(this).forEach((key) => {
           const config: TypePropertyConfig = Reflect.getMetadata(typeConfig.metaKey, this, key);
-          console.log(config);
-          if (config && config.handle) {
-            if (typeof config.handle === 'string') {
-              this[key] = data[config.handle];
-            } else {
-              this[key] = config.handle(data, key);
+          let finalValue: any;
+          if (config) {
+            if (config.handle) {
+              if (typeof config.handle === 'string') {
+                finalValue = Lodash.get(data, config.handle);
+              } else {
+                finalValue = config.handle(data, key);
+              }
             }
           } else {
-            this[key] = data[key];
+            finalValue = Lodash.get(data, key);
           }
+          this[key] = finalValue ?? this[key];
         });
       }
     };
