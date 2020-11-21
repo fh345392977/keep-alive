@@ -1,5 +1,7 @@
 import { Base } from '@/metadata/base';
 import { Column, MetaEnhancedClass } from '@/metadata/utils';
+import React from 'react';
+import CustomRangePicker from '@/components/CustomRangePicker';
 
 @MetaEnhancedClass()
 export default class Slice extends Base {
@@ -136,8 +138,10 @@ export default class Slice extends Base {
   @Column({
     title: '入库时间',
     dataIndex: ['created_at'],
-    valueType: 'date',
     width: 180,
+    renderFormItem: (item, { value, onChange }) => {
+      return <CustomRangePicker value={value} onChange={onChange} />;
+    },
   })
   created_at: string = '';
 }

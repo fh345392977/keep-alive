@@ -9,8 +9,8 @@ import {
 import { ProColumns, RequestData } from '@ant-design/pro-table';
 import { request } from 'umi';
 import * as Lodash from 'lodash';
-import { TableListBaseParams } from './pagination';
 import { SortOrder } from 'antd/lib/table/interface';
+import { TableListBaseParams } from './pagination';
 
 export interface ConstructableFunction {
   new (params?: any): ConstructableFunction;
