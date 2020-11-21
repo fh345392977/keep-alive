@@ -56,3 +56,112 @@ ol {
 .ant-pro-basicLayout {
   height: 100%;
 }
+
+.full-contain {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+.flex {
+  display: flex;
+}
+.column {
+  flex-direction: column;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-around {
+  justify-content: space-around;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+.align-center {
+  align-items: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.flex-loop(@index) when (@index > 0) {
+  .flex-@{index} {
+    flex: @index;
+  }
+  .flex-loop(@index - 1);
+}
+.flex-loop(6);
+@paddingCalcMin: 4px;
+.padding-loop(@index) when (@index > 0) {
+  .padding-@{index} {
+    padding: @index * @paddingCalcMin;
+  }
+  .padding-v-@{index} {
+    padding-top: @index * @paddingCalcMin;
+    padding-bottom: @index * @paddingCalcMin;
+  }
+  .padding-h-@{index} {
+    padding-right: @index * @paddingCalcMin;
+    padding-left: @index * @paddingCalcMin;
+  }
+  .padding-t-@{index} {
+    padding-top: @index * @paddingCalcMin;
+  }
+  .padding-l-@{index} {
+    padding-left: @index * @paddingCalcMin;
+  }
+  .padding-r-@{index} {
+    padding-right: @index * @paddingCalcMin;
+  }
+  .padding-b-@{index} {
+    padding-bottom: @index * @paddingCalcMin;
+  }
+  .margin-@{index} {
+    margin: @index * @paddingCalcMin;
+  }
+  .margin-v-@{index} {
+    margin-top: @index * @paddingCalcMin;
+    margin-bottom: @index * @paddingCalcMin;
+  }
+  .margin-h-@{index} {
+    margin-right: @index * @paddingCalcMin;
+    margin-left: @index * @paddingCalcMin;
+  }
+  .margin-t-@{index} {
+    margin-top: @index * @paddingCalcMin;
+  }
+  .margin-l-@{index} {
+    margin-left: @index * @paddingCalcMin;
+  }
+  .margin-r-@{index} {
+    margin-right: @index * @paddingCalcMin;
+  }
+  .margin-b-@{index} {
+    margin-bottom: @index * @paddingCalcMin;
+  }
+  .padding-loop(@index - 1);
+}
+.padding-loop(8);

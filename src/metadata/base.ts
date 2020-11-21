@@ -1,7 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ProColumns } from '@ant-design/pro-table';
+import { ProColumns, RequestData } from '@ant-design/pro-table';
+import { SortOrder } from 'antd/lib/table/interface';
 import { ColumnMap, FormikItemConfigType } from './meta';
-import { TableListBaseParams, TableListData } from './pagination';
+import { TableListBaseParams } from './pagination';
+
+type GetListProps<T> = (
+  api: string,
+) => (
+  params: any & TableListBaseParams,
+  sort: {
+    [key: string]: SortOrder;
+  },
+  filter: {
+    [key: string]: React.ReactText[];
+  },
+) => Promise<RequestData<T>>;
 
 /**
  * offer types
@@ -17,8 +30,21 @@ export abstract class Base {
     return {};
   }
 
-  static async getList<T>(params: TableListBaseParams): Promise<TableListData<T>> {
-    return { total: 0, list: [] };
+  static getList<T>(api: string) {
+    return async (
+      params: any & TableListBaseParams,
+      sort: {
+        [key: string]: SortOrder;
+      },
+      filter: {
+        [key: string]: React.ReactText[];
+      },
+    ): Promise<RequestData<T>> => {
+      return {
+        data: [],
+        total: 0,
+      };
+    };
   }
 
   static getFormikInitValues<T>(item?: T): Partial<T> {

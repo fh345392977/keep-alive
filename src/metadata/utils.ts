@@ -6,10 +6,11 @@ import {
   FormikPropertyConfig,
   TypePropertyConfig,
 } from '@/metadata/meta';
-import { ProColumns } from '@ant-design/pro-table';
+import { ProColumns, RequestData } from '@ant-design/pro-table';
 import { request } from 'umi';
 import * as Lodash from 'lodash';
-import { TableListBaseParams, TableListData } from './pagination';
+import { TableListBaseParams } from './pagination';
+import { SortOrder } from 'antd/lib/table/interface';
 
 export interface ConstructableFunction {
   new (params?: any): ConstructableFunction;
@@ -151,11 +152,41 @@ export function MetaEnhancedClass(): any {
         return data;
       }
 
-      static async getList<T>(api: string, params: TableListBaseParams): Promise<TableListData<T>> {
-        const result = await request(api, { params });
-        return {
-          total: result.count,
-          list: result.data.map((item: any) => new EnhancedClass(item)),
+      static getList<T>(api: string) {
+        return async (
+          params: any & TableListBaseParams,
+          sort: {
+            [key: string]: SortOrder;
+          },
+          filter: {
+            [key: string]: React.ReactText[];
+          },
+        ): Promise<RequestData<T>> => {
+          let sort_by;
+          let sort_way;
+          const sorts = Object.keys(sort);
+          if (sorts.length !== 0) {
+            // eslint-disable-next-line prefer-destructuring
+            sort_by = sorts[0];
+            sort_way = sort[sorts[0]];
+          }
+          const finalParams = {
+            ...params,
+            page: params.current,
+            page_size: params.pageSize,
+            ...filter,
+            sort_by,
+            sort_way,
+          };
+          delete finalParams.current;
+          delete finalParams.pageSize;
+          const result = await request(api, {
+            params: finalParams,
+          });
+          return {
+            total: result.count,
+            data: result.data.map((item: any) => new EnhancedClass(item)),
+          };
         };
       }
 

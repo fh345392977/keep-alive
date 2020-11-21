@@ -1,5 +1,6 @@
 import { Button, message, notification } from 'antd';
 import 'reflect-metadata';
+import '@hzzt/plugin-core/src/object';
 
 import React from 'react';
 import { useIntl } from 'umi';
