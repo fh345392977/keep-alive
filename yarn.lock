@@ -1450,10 +1450,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hzzt/plugin-core@^1.3.3":
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/@hzzt/plugin-core/-/plugin-core-1.3.3.tgz#87731bc881b4a110cbbaad1c723c8b5cffa93ed8"
-  integrity sha512-XM+qPyxFIx6W8MPja6SfYfviOzlWZ109fmRY8iMoNXCJhRIW/MQcrsx7GzdGKwDaiPiH4WG41js1qsQ6nb1EZw==
+"@hzzt/plugin-core@^1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@hzzt/plugin-core/-/plugin-core-1.3.4.tgz#fc59bca92c69a9fed651d9cb393b2881e866cd19"
+  integrity sha512-2RerrK27WgvP9N7KKqkbTVhcLnDpc7NrEKs9Mk92PeWhHZnCe2vmoiel6V9R/6nEXx4yXzvdAYTk9d9XUnv5CQ==
   dependencies:
     dayjs "^1.8.17"
     echarts "^4.7.0"
