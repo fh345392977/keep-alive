@@ -25,14 +25,14 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
     options,
     columns,
     dynamicHeight,
-    extraScrollX,
+    extraScrollX = 0,
     ...rests
   } = props;
   const [collapsed, setCollapsed] = useState(true);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [scrollY, setScrollY] = useState<number>(0);
+  const [scrollX, setScrollX] = useState<string | number>('100%');
   const initColumnShow: ColumnShow = {};
-  let scrollX: string | number = '100%';
   if (columns) {
     columns.forEach((i) => {
       if (i.show === false) {
@@ -45,22 +45,33 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
   const [columnsStateMap, setColumnsStateMap] = useState<ColumnShow>(initColumnShow);
   const [isFullscreen, { toggleFull }] = useFullscreen(wrapperRef);
   const { height } = useWindowSize();
-  if (columns) {
-    let isPercent = false;
-    const columnScrollX = columns.reduce((pre, cur) => {
-      if (cur.width && cur.key && !columnsStateMap[cur.key]) {
-        if (typeof cur.width === 'string') {
-          isPercent = true;
-          return pre + parseInt(cur.width.replace('%', ''), 10);
+  console.log('scrollX', scrollX);
+  console.log('columnsStateMap', columnsStateMap);
+  useEffect(() => {
+    if (columns) {
+      let isPercent = false;
+      const columnScrollX = columns.reduce((pre, cur) => {
+        if (
+          cur.width &&
+          cur.key &&
+          (!columnsStateMap[cur.key] || columnsStateMap[cur.key].show !== false)
+        ) {
+          if (typeof cur.width === 'string') {
+            isPercent = true;
+            return pre + parseInt(cur.width.replace('%', ''), 10);
+          }
+          return pre + cur.width;
         }
-        return pre + cur.width;
+        return pre;
+      }, 0);
+      if (columnScrollX === 0) {
+        setScrollX('100%');
+      } else {
+        setScrollX(isPercent ? `${columnScrollX.toString()}%` : columnScrollX + extraScrollX);
       }
-      return pre;
-    }, 0);
-    if (columnScrollX !== 0) {
-      scrollX = isPercent ? `${columnScrollX.toString()}%` : columnScrollX + (extraScrollX || 0);
     }
-  }
+  }, [columns, columnsStateMap, extraScrollX]);
+
   useEffect(() => {
     if (wrapperRef.current) {
       const headerForm = wrapperRef.current.querySelector('.ant-pro-table-search');

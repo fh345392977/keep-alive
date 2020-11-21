@@ -1,12 +1,44 @@
-import { PageContainer } from '@ant-design/pro-layout';
-import React from 'react';
+import React, { useRef, useState } from 'react';
+import AutoHeightProTable from '@/components/AutoHeightProTable';
+import Slice from '@/model/Slice';
+import { ActionType } from '@ant-design/pro-table';
+import { Button, Tabs } from 'antd';
 
-export interface AllocateItemProps {
-  status: string;
+export enum AllocateTypeEnum {
+  label = 'label',
+  review = 'review',
+  refine = 'refine',
 }
 
-const Allocate: React.FC<AllocateItemProps> = props => {
-  return <PageContainer>Allocate-{props.status}</PageContainer>
+export interface AllocateProps {
+  type: AllocateTypeEnum;
 }
 
-export default Allocate;
+export default (props: AllocateProps) => {
+  const defaultColumns = Slice.getColumns<Slice>();
+  const actionRef = useRef<ActionType>();
+  const [tab, setTab] = useState('todo');
+  console.log('allocateType', props.type);
+  return (
+    <div className="full-contain flex column">
+      <Tabs activeKey={tab} onChange={setTab}>
+        <Tabs.TabPane tab="未分配" key="todo" />
+        <Tabs.TabPane tab="已分配" key="done" />
+      </Tabs>
+      <div className="flex-1">
+        <AutoHeightProTable<Slice>
+          request={Slice.getList('/api/list')}
+          toolbar={{
+            filter: false,
+            actions: [<Button key="allocate">分配</Button>],
+          }}
+          columns={defaultColumns}
+          params={{ status: tab }}
+          rowKey="id"
+          extraScrollX={Slice.extraXcrollX}
+          actionRef={actionRef}
+        />
+      </div>
+    </div>
+  );
+};
