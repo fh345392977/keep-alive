@@ -17,7 +17,7 @@ export default () => {
     <div className="full-contain">
       <AutoHeightProTable<Slice>
         id="allocate"
-        request={Slice.getList('/api/rule')}
+        request={Slice.getList('/api/list')}
         countOptions={{
           api: '/api/list/count',
         }}
@@ -36,8 +36,8 @@ export default () => {
           },
         ]}
         params={{ type }}
-        tabParamsFormatter={(tab) => ({ status: tab })}
-        tabFromSearch={(values) => values?.status}
+        tabParamsFormatter={(tab) => ({ allocate_status: tab })}
+        tabFromSearch={(values) => values?.allocate_status}
         columns={columns}
         setParamsToRoute
         rowKey="id"

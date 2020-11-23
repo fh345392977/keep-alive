@@ -11,5 +11,6 @@ export default (needReplace: boolean, defaultValues: Store | undefined): Store |
       initialValues![key] = value;
     });
   }
+  console.log('initialValues', initialValues);
   return initialValues;
 };

@@ -19,6 +19,7 @@ export interface TypePropertyConfig {
 export type CustomColumnPropertyConfig<T = any> = {
   // 列默认是否显示，如需默认隐藏，请设置为false
   show: boolean;
+  fromRoute: (value: any) => any;
 };
 export type ColumnPropertyConfig<T = any> = Partial<ProColumns<T> & CustomColumnPropertyConfig<T>>;
 
