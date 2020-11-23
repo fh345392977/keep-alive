@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import AutoHeightProTable from '@/components/AutoHeightProTable';
 import Slice from '@/model/Slice';
 import { ActionType } from '@ant-design/pro-table';
@@ -17,7 +17,6 @@ export interface AllocateProps {
 export default (props: AllocateProps) => {
   const defaultColumns = Slice.getColumns<Slice>();
   const actionRef = useRef<ActionType>();
-  const [tab, setTab] = useState<React.Key>('todo');
   console.log('allocateType', props.type);
   return (
     <div className="full-contain">
@@ -27,25 +26,21 @@ export default (props: AllocateProps) => {
           api: '/api/list/count',
         }}
         toolbar={{
-          filter: false,
           actions: [<Button key="allocate">分配</Button>],
-          menu: {
-            activeKey: tab,
-            onChange: (activeKey = 'todo') => setTab(activeKey),
-            items: [
-              {
-                key: 'todo',
-                label: '未分配',
-              },
-              {
-                key: 'done',
-                label: '已分配',
-              },
-            ],
-          },
         }}
+        defaultTab="todo"
+        tabs={[
+          {
+            key: 'todo',
+            label: '未分配',
+          },
+          {
+            key: 'done',
+            label: '已分配',
+          },
+        ]}
+        tabParamsFormatter={(tab) => ({ status: tab })}
         columns={defaultColumns}
-        params={{ status: tab }}
         rowKey="id"
         extraScrollX={Slice.extraXcrollX}
         actionRef={actionRef}

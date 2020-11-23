@@ -4,17 +4,17 @@ import { SortOrder } from 'antd/lib/table/interface';
 import { ColumnMap, FormikItemConfigType } from './meta';
 import { TableListBaseParams } from './pagination';
 
-type GetListProps<T> = (
-  api: string,
-) => (
-  params: any & TableListBaseParams,
-  sort: {
-    [key: string]: SortOrder;
-  },
-  filter: {
-    [key: string]: React.ReactText[];
-  },
-) => Promise<RequestData<T>>;
+// type GetListProps<T> = (
+//   api: string,
+// ) => (
+//   params: any & TableListBaseParams,
+//   sort: {
+//     [key: string]: SortOrder;
+//   },
+//   filter: {
+//     [key: string]: React.ReactText[];
+//   },
+// ) => Promise<RequestData<T>>;
 
 /**
  * offer types

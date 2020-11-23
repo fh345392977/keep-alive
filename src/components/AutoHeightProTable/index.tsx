@@ -23,6 +23,8 @@ interface Props<T, U extends ParamsType = {}> extends ProTableProps<T, U> {
   extraScrollX?: number; // 未设置width的column所需要的宽度
   countOptions?: TableCountOptionsProps<U>; // 角标配置
   tabs?: ListToolBarMenuItem[]; // 表格tabs数组
+  defaultTab?: string;
+  tabParamsFormatter?: (tab: React.Key) => ParamsType;
 }
 
 const renderBadge = (count: number) => {
@@ -53,15 +55,25 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
     countOptions = {},
     toolbar = {},
     tabs = [],
+    defaultTab,
+    params = {},
+    tabParamsFormatter,
     ...rests
   } = props;
   const [collapsed, setCollapsed] = useState(true);
-  const [tab, setTab] = useState<React.Key>('todo');
+  const [tab, setTab] = useState<React.Key>(defaultTab || tabs.first?.key || '');
   const [tabCount, setTabCount] = useState<TableCount>({});
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [scrollY, setScrollY] = useState<number>(0);
   const [scrollX, setScrollX] = useState<string | number>('100%');
   const initColumnShow: ColumnShow = {};
+  let tableParams = { ...params };
+  if (tabParamsFormatter) {
+    tableParams = {
+      ...tableParams,
+      ...tabParamsFormatter(tab),
+    };
+  }
   if (columns) {
     columns.forEach((i) => {
       if (i.show === false) {
@@ -145,6 +157,7 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
         pagination={pagination}
         columnsStateMap={columnsStateMap}
         onColumnsStateChange={(map) => setColumnsStateMap(map)}
+        params={tableParams as U}
         toolbar={{
           filter: false,
           menu: {
@@ -164,9 +177,9 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
         }}
         request={
           request
-            ? async (params, sort, filter) => {
-                run(params);
-                return request(params, sort, filter);
+            ? async (finalParams, sort, filter) => {
+                run(finalParams);
+                return request(finalParams, sort, filter);
               }
             : undefined
         }
