@@ -23,7 +23,9 @@ export default (props: AllocateProps) => {
     <div className="full-contain">
       <AutoHeightProTable<Slice>
         request={Slice.getList('/api/list')}
-        countApi="/api/list/count"
+        countOptions={{
+          api: '/api/list/count',
+        }}
         toolbar={{
           filter: false,
           actions: [<Button key="allocate">分配</Button>],

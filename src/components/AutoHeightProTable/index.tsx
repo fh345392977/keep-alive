@@ -4,7 +4,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useFullscreen } from 'ahooks';
 import { useWindowSize } from 'react-use';
 import { ColumnPropertyConfig } from '@/metadata/meta';
-import useTableCount, { TableCount, TableCountOptionsProps } from '@/hooks/useTableCount';
+import useTableCount, {
+  onCountSuccessType,
+  TableCount,
+  TableCountOptionsProps,
+} from '@/hooks/useTableCount';
 import { Badge } from 'antd';
 import { ListToolBarMenuItem } from '@ant-design/pro-table/lib/component/ListToolBar/HeaderMenu';
 import styles from './style.less';
@@ -17,7 +21,7 @@ interface Props<T, U extends ParamsType = {}> extends ProTableProps<T, U> {
   dynamicHeight?: number; // 动态计算的额外高度
   columns?: ColumnPropertyConfig<T>[];
   extraScrollX?: number; // 未设置width的column所需要的宽度
-  countOptions?: Pick<TableCountOptionsProps<U>, 'api' | 'paramsFormatter'>; // 角标配置
+  countOptions?: TableCountOptionsProps<U>; // 角标配置
   tabs?: ListToolBarMenuItem[]; // 表格tabs数组
 }
 
@@ -69,7 +73,11 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
   }
   const [columnsStateMap, setColumnsStateMap] = useState<ColumnShow>(initColumnShow);
   const [isFullscreen, { toggleFull }] = useFullscreen(wrapperRef);
-  const { run } = useTableCount<U>({ ...countOptions, onSuccess: setTabCount });
+  const countOnSuccess: onCountSuccessType = (data) => {
+    setTabCount(data);
+    countOptions?.onSuccess?.(data);
+  };
+  const { run } = useTableCount<U>({ ...countOptions, onSuccess: countOnSuccess });
   const { height } = useWindowSize();
   useEffect(() => {
     if (columns) {
