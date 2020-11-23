@@ -8,10 +8,14 @@ export interface TableCount {
 export type onCountSuccessType = (data: TableCount) => void;
 export interface TableCountOptionsProps<T> {
   api?: string;
-  onSuccess?: onCountSuccessType;
+  onLoad?: onCountSuccessType;
   paramsFormatter?: (params: T) => any;
 }
-export default <T>({ api = '', onSuccess, paramsFormatter }: TableCountOptionsProps<T> = {}) => {
+export default <T>({
+  api = '',
+  onLoad: onSuccess,
+  paramsFormatter,
+}: TableCountOptionsProps<T> = {}) => {
   const { run } = useRequest((params) => request(api, { params }), {
     manual: true,
     onSuccess: (result: any) => {

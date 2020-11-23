@@ -3,18 +3,16 @@ import AutoHeightProTable from '@/components/AutoHeightProTable';
 import Slice from '@/model/Slice';
 import { ActionType } from '@ant-design/pro-table';
 import { Button } from 'antd';
-import { useParams, withRouter } from 'umi';
-import { RouteComponentProps } from 'react-router-dom';
+import { useParams } from 'umi';
 
-export interface AllocateRouteProps {
+export interface AllocateRouteParams {
   type: string;
 }
 
-const Allocation = (props: RouteComponentProps) => {
-  const defaultColumns = Slice.getColumns<Slice>();
+export default () => {
+  const columns = Slice.getColumns<Slice>();
   const actionRef = useRef<ActionType>();
-  const { type } = useParams<AllocateRouteProps>();
-  console.log('route', props.location);
+  const { type } = useParams<AllocateRouteParams>();
   return (
     <div className="full-contain">
       <AutoHeightProTable<Slice>
@@ -39,7 +37,9 @@ const Allocation = (props: RouteComponentProps) => {
         ]}
         params={{ type }}
         tabParamsFormatter={(tab) => ({ status: tab })}
-        columns={defaultColumns}
+        tabFromSearch={(values) => values?.status}
+        columns={columns}
+        setParamsToRoute
         rowKey="id"
         extraScrollX={Slice.extraXcrollX}
         actionRef={actionRef}
@@ -47,5 +47,3 @@ const Allocation = (props: RouteComponentProps) => {
     </div>
   );
 };
-
-export default withRouter(Allocation);

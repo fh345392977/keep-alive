@@ -110,10 +110,12 @@ const TableList: React.FC<{}> = () => {
   return (
     <>
       <AutoHeightProTable<RuleLog>
+        id="rule-list"
         actionRef={actionRef}
         rowKey="key"
         dynamicHeight={selectedRowsState?.length > 0 ? 99 : 0}
         sticky
+        setParamsToRoute
         search={{
           labelWidth: 120,
         }}

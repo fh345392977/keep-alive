@@ -14,6 +14,8 @@ import { ListToolBarMenuItem } from '@ant-design/pro-table/lib/component/ListToo
 import useScrollX from '@/hooks/useScrollX';
 import useColumnState from '@/hooks/useColumnState';
 import useScrollY from '@/hooks/useScrollY';
+import useInitRouteSearch from '@/hooks/useInitRouteSearch';
+import { useHistory, useLocation } from 'react-router-dom';
 import styles from './style.less';
 
 interface Props<T, U extends ParamsType = {}> extends ProTableProps<T, U> {
@@ -26,6 +28,7 @@ interface Props<T, U extends ParamsType = {}> extends ProTableProps<T, U> {
   defaultMenu?: string; // 默认tab
   tabParamsFormatter?: (tab: React.Key) => ParamsType; // tab的参数转换
   setParamsToRoute?: boolean;
+  tabFromSearch?: (value: any) => string | undefined;
 }
 
 const renderBadge = (count: number) => {
@@ -60,15 +63,22 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
     defaultMenu,
     params = {},
     tabParamsFormatter,
-    setParamsToRoute,
+    tabFromSearch,
+    setParamsToRoute = false,
+    form,
     ...rests
   } = props;
   const [collapsed, setCollapsed] = useState(true);
   // 每次初始化时的默认menu，后续很可能跟在route后，做到参数的缓存
-  const initMenu = defaultMenu ?? menus.first?.key ?? '';
-  const [tab, setTab] = useState<React.Key>(initMenu);
   const [tabCount, setTabCount] = useState<TableCount>({});
-
+  const history = useHistory();
+  const location = useLocation();
+  const initialValues = useInitRouteSearch(setParamsToRoute, form?.initialValues);
+  let initMenu = defaultMenu ?? menus.first?.key ?? '';
+  if (tabFromSearch) {
+    initMenu = tabFromSearch(initialValues) ?? initMenu;
+  }
+  const [tab, setTab] = useState<React.Key>(initMenu);
   let tableParams = { ...params };
   if (tabParamsFormatter) {
     tableParams = {
@@ -111,6 +121,10 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
         onLoad={(data) => {
           console.log('onLoad', data);
         }}
+        form={{
+          initialValues,
+          ...form,
+        }}
         toolbar={{
           filter: false,
           menu: {
@@ -131,6 +145,15 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
         request={
           request
             ? async (finalParams, sort, filter) => {
+                if (setParamsToRoute) {
+                  const urlParasm = Object.keys(finalParams).reduce((pre, queryKey) => {
+                    if (finalParams[queryKey]) {
+                      pre.append(queryKey, finalParams[queryKey].toString());
+                    }
+                    return pre;
+                  }, new URLSearchParams());
+                  history.replace(`${location.pathname}?${urlParasm.toString()}`);
+                }
                 run(finalParams);
                 return request(finalParams, sort, filter);
               }

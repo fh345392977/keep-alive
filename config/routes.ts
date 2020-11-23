@@ -32,7 +32,7 @@ const routes: IRoute[] = [
       {
         path: '/allocate/label',
         name: 'allocate-label',
-        component: './Allocate/Label',
+        component: './Allocate/Allocate',
       },
       {
         path: '/allocate/review',
