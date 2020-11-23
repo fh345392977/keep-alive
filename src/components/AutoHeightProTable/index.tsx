@@ -1,6 +1,6 @@
 import { ParamsType } from '@ant-design/pro-provider';
-import ProTable, { ColumnsState, ProTableProps } from '@ant-design/pro-table';
-import React, { useEffect, useRef, useState } from 'react';
+import ProTable, { ProTableProps } from '@ant-design/pro-table';
+import React, { useRef, useState } from 'react';
 import { useFullscreen } from 'ahooks';
 import { useWindowSize } from 'react-use';
 import { ColumnPropertyConfig } from '@/metadata/meta';
@@ -11,20 +11,21 @@ import useTableCount, {
 } from '@/hooks/useTableCount';
 import { Badge } from 'antd';
 import { ListToolBarMenuItem } from '@ant-design/pro-table/lib/component/ListToolBar/HeaderMenu';
+import useScrollX from '@/hooks/useScrollX';
+import useColumnState from '@/hooks/useColumnState';
+import useScrollY from '@/hooks/useScrollY';
 import styles from './style.less';
 
-export interface ColumnShow {
-  [key: string]: ColumnsState;
-}
-
 interface Props<T, U extends ParamsType = {}> extends ProTableProps<T, U> {
+  id: string;
   dynamicHeight?: number; // 动态计算的额外高度
   columns?: ColumnPropertyConfig<T>[];
   extraScrollX?: number; // 未设置width的column所需要的宽度
   countOptions?: TableCountOptionsProps<U>; // 角标配置
-  tabs?: ListToolBarMenuItem[]; // 表格tabs数组
-  defaultTab?: string;
-  tabParamsFormatter?: (tab: React.Key) => ParamsType;
+  menus?: ListToolBarMenuItem[]; // 表格tabs数组
+  defaultMenu?: string; // 默认tab
+  tabParamsFormatter?: (tab: React.Key) => ParamsType; // tab的参数转换
+  setParamsToRoute?: boolean;
 }
 
 const renderBadge = (count: number) => {
@@ -43,6 +44,7 @@ const renderBadge = (count: number) => {
 
 function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
   const {
+    id: tableId,
     formRef,
     search,
     showHeader = true,
@@ -54,19 +56,19 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
     request,
     countOptions = {},
     toolbar = {},
-    tabs = [],
-    defaultTab,
+    menus = [],
+    defaultMenu,
     params = {},
     tabParamsFormatter,
+    setParamsToRoute,
     ...rests
   } = props;
   const [collapsed, setCollapsed] = useState(true);
-  const [tab, setTab] = useState<React.Key>(defaultTab || tabs.first?.key || '');
+  // 每次初始化时的默认menu，后续很可能跟在route后，做到参数的缓存
+  const initMenu = defaultMenu ?? menus.first?.key ?? '';
+  const [tab, setTab] = useState<React.Key>(initMenu);
   const [tabCount, setTabCount] = useState<TableCount>({});
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const [scrollY, setScrollY] = useState<number>(0);
-  const [scrollX, setScrollX] = useState<string | number>('100%');
-  const initColumnShow: ColumnShow = {};
+
   let tableParams = { ...params };
   if (tabParamsFormatter) {
     tableParams = {
@@ -74,79 +76,27 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
       ...tabParamsFormatter(tab),
     };
   }
-  if (columns) {
-    columns.forEach((i) => {
-      if (i.show === false) {
-        initColumnShow[i.dataIndex!.toString()] = {
-          show: false,
-        };
-      }
-    });
-  }
-  const [columnsStateMap, setColumnsStateMap] = useState<ColumnShow>(initColumnShow);
+  const [columnsStateMap, setColumnsStateMap] = useColumnState(columns, tableId);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, { toggleFull }] = useFullscreen(wrapperRef);
+  const { height } = useWindowSize();
+  const scrollX = useScrollX([columns, columnsStateMap, extraScrollX]);
+  const scrollY = useScrollY([
+    wrapperRef,
+    collapsed,
+    formRef,
+    showHeader,
+    pagination,
+    isFullscreen,
+    height,
+    dynamicHeight,
+  ]);
+
   const countOnSuccess: onCountSuccessType = (data) => {
     setTabCount(data);
-    countOptions?.onSuccess?.(data);
+    countOptions?.onLoad?.(data);
   };
-  const { run } = useTableCount<U>({ ...countOptions, onSuccess: countOnSuccess });
-  const { height } = useWindowSize();
-  useEffect(() => {
-    if (columns) {
-      let isPercent = false;
-      const columnScrollX = columns.reduce((pre, cur) => {
-        if (
-          cur.width &&
-          cur.key &&
-          (!columnsStateMap[cur.key] || columnsStateMap[cur.key].show !== false)
-        ) {
-          if (typeof cur.width === 'string') {
-            isPercent = true;
-            return pre + parseInt(cur.width.replace('%', ''), 10);
-          }
-          return pre + cur.width;
-        }
-        return pre;
-      }, 0);
-      if (columnScrollX === 0) {
-        setScrollX('100%');
-      } else {
-        setScrollX(isPercent ? `${columnScrollX.toString()}%` : columnScrollX + extraScrollX);
-      }
-    }
-  }, [columns, columnsStateMap, extraScrollX]);
-
-  useEffect(() => {
-    if (wrapperRef.current) {
-      const headerForm = wrapperRef.current.querySelector('.ant-pro-table-search');
-      const tableHead = wrapperRef.current.querySelector('.ant-table-thead');
-      const tableAction = wrapperRef.current.querySelector('.ant-pro-table-list-toolbar');
-      const wrapperHeight = isFullscreen
-        ? height
-        : wrapperRef.current.getBoundingClientRect().height;
-      let nextScrollY = wrapperHeight;
-      if (dynamicHeight && !Number.isNaN(dynamicHeight)) {
-        nextScrollY -= dynamicHeight;
-      }
-      if (tableHead) {
-        if (showHeader) {
-          nextScrollY -= tableHead.getBoundingClientRect().height;
-        }
-      }
-      if (pagination !== false) {
-        nextScrollY -= 56;
-      }
-      if (headerForm) {
-        const headerFormMargin = 16;
-        const headerFormHeight = headerForm.getBoundingClientRect().height;
-        nextScrollY -= headerFormMargin + headerFormHeight;
-      }
-      if (tableAction) {
-        nextScrollY -= tableAction.getBoundingClientRect().height;
-      }
-      setScrollY(nextScrollY);
-    }
-  }, [wrapperRef, collapsed, formRef, showHeader, pagination, isFullscreen, height, dynamicHeight]);
+  const { run } = useTableCount<U>({ ...countOptions, onLoad: countOnSuccess });
 
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
@@ -156,14 +106,17 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
         showHeader={showHeader}
         pagination={pagination}
         columnsStateMap={columnsStateMap}
-        onColumnsStateChange={(map) => setColumnsStateMap(map)}
+        onColumnsStateChange={setColumnsStateMap}
         params={tableParams as U}
+        onLoad={(data) => {
+          console.log('onLoad', data);
+        }}
         toolbar={{
           filter: false,
           menu: {
             activeKey: tab,
-            onChange: (activeKey = 'todo') => setTab(activeKey),
-            items: tabs.map((i) => ({
+            onChange: (activeKey = initMenu) => setTab(activeKey),
+            items: menus.map((i) => ({
               key: i.key,
               label: (
                 <span>

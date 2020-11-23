@@ -16,13 +16,19 @@ const routes: IRoute[] = [
     path: '/welcome',
     name: 'welcome',
     component: './Welcome',
-    hideInMenu:true,
+    hideInMenu: true,
   },
   {
     path: '/allocate',
     name: 'allocate',
     icon: 'smile',
     routes: [
+      {
+        path: '/allocate/:type',
+        name: 'allocate-label',
+        component: './Allocate/Allocate',
+        hideInMenu: true,
+      },
       {
         path: '/allocate/label',
         name: 'allocate-label',
@@ -31,14 +37,14 @@ const routes: IRoute[] = [
       {
         path: '/allocate/review',
         name: 'allocate-review',
-        component: './Allocate/Review',
+        component: './Allocate/Allocate',
       },
       {
         path: '/allocate/refine',
         name: 'allocate-refine',
-        component: './Allocate/Refine',
+        component: './Allocate/Allocate',
       },
-    ]
+    ],
   },
   {
     path: '/annonation',
@@ -60,7 +66,7 @@ const routes: IRoute[] = [
         name: 'annonation-refine',
         component: './Annonation/Refine',
       },
-    ]
+    ],
   },
   {
     path: '/model-manage',
@@ -82,7 +88,7 @@ const routes: IRoute[] = [
         name: 'model-test',
         component: './ModelManage/Test',
       },
-    ]
+    ],
   },
   {
     path: '/statistic',
@@ -99,7 +105,7 @@ const routes: IRoute[] = [
         name: 'statistic-workload',
         component: './Statistic/Workload',
       },
-    ]
+    ],
   },
   {
     path: '/classification',
@@ -138,7 +144,7 @@ const routes: IRoute[] = [
         name: 'system-slide',
         component: './System/Slide',
       },
-    ]
+    ],
   },
   {
     name: 'list.table-list',

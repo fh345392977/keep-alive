@@ -20,6 +20,9 @@ import { TableListBaseParams } from './pagination';
  * offer types
  */
 export abstract class Base {
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor,@typescript-eslint/no-empty-function
+  constructor(data: any = {}) {}
+
   static extraXcrollX: number;
 
   static getColumns<T>(extra: ColumnMap<T> = new ColumnMap()): ProColumns<T>[] {

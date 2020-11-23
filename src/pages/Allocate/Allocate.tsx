@@ -3,33 +3,31 @@ import AutoHeightProTable from '@/components/AutoHeightProTable';
 import Slice from '@/model/Slice';
 import { ActionType } from '@ant-design/pro-table';
 import { Button } from 'antd';
+import { useParams, withRouter } from 'umi';
+import { RouteComponentProps } from 'react-router-dom';
 
-export enum AllocateTypeEnum {
-  label = 'label',
-  review = 'review',
-  refine = 'refine',
+export interface AllocateRouteProps {
+  type: string;
 }
 
-export interface AllocateProps {
-  type: AllocateTypeEnum;
-}
-
-export default (props: AllocateProps) => {
+const Allocation = (props: RouteComponentProps) => {
   const defaultColumns = Slice.getColumns<Slice>();
   const actionRef = useRef<ActionType>();
-  console.log('allocateType', props.type);
+  const { type } = useParams<AllocateRouteProps>();
+  console.log('route', props.location);
   return (
     <div className="full-contain">
       <AutoHeightProTable<Slice>
-        request={Slice.getList('/api/list')}
+        id="allocate"
+        request={Slice.getList('/api/rule')}
         countOptions={{
           api: '/api/list/count',
         }}
         toolbar={{
           actions: [<Button key="allocate">分配</Button>],
         }}
-        defaultTab="todo"
-        tabs={[
+        defaultMenu="todo"
+        menus={[
           {
             key: 'todo',
             label: '未分配',
@@ -39,6 +37,7 @@ export default (props: AllocateProps) => {
             label: '已分配',
           },
         ]}
+        params={{ type }}
         tabParamsFormatter={(tab) => ({ status: tab })}
         columns={defaultColumns}
         rowKey="id"
@@ -48,3 +47,5 @@ export default (props: AllocateProps) => {
     </div>
   );
 };
+
+export default withRouter(Allocation);
