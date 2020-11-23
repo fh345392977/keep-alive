@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import AutoHeightProTable from '@/components/AutoHeightProTable';
 import Slice from '@/model/Slice';
 import { ActionType } from '@ant-design/pro-table';
-import { Button, Tabs } from 'antd';
+import { Button } from 'antd';
 
 export enum AllocateTypeEnum {
   label = 'label',
@@ -17,28 +17,36 @@ export interface AllocateProps {
 export default (props: AllocateProps) => {
   const defaultColumns = Slice.getColumns<Slice>();
   const actionRef = useRef<ActionType>();
-  const [tab, setTab] = useState('todo');
+  const [tab, setTab] = useState<React.Key>('todo');
   console.log('allocateType', props.type);
   return (
-    <div className="full-contain flex column">
-      <Tabs activeKey={tab} onChange={setTab}>
-        <Tabs.TabPane tab="未分配" key="todo" />
-        <Tabs.TabPane tab="已分配" key="done" />
-      </Tabs>
-      <div className="flex-1">
-        <AutoHeightProTable<Slice>
-          request={Slice.getList('/api/list')}
-          toolbar={{
-            filter: false,
-            actions: [<Button key="allocate">分配</Button>],
-          }}
-          columns={defaultColumns}
-          params={{ status: tab }}
-          rowKey="id"
-          extraScrollX={Slice.extraXcrollX}
-          actionRef={actionRef}
-        />
-      </div>
+    <div className="full-contain">
+      <AutoHeightProTable<Slice>
+        request={Slice.getList('/api/list')}
+        toolbar={{
+          filter: false,
+          actions: [<Button key="allocate">分配</Button>],
+          menu: {
+            activeKey: tab,
+            onChange: (activeKey = 'todo') => setTab(activeKey),
+            items: [
+              {
+                key: 'todo',
+                label: '未分配',
+              },
+              {
+                key: 'done',
+                label: '已分配',
+              },
+            ],
+          },
+        }}
+        columns={defaultColumns}
+        params={{ status: tab }}
+        rowKey="id"
+        extraScrollX={Slice.extraXcrollX}
+        actionRef={actionRef}
+      />
     </div>
   );
 };

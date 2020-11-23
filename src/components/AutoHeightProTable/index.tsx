@@ -11,9 +11,9 @@ export interface ColumnShow {
 }
 
 interface Props<T, U extends ParamsType = {}> extends ProTableProps<T, U> {
-  dynamicHeight?: number;
+  dynamicHeight?: number; // 动态计算的额外高度
   columns?: ColumnPropertyConfig<T>[];
-  extraScrollX?: number;
+  extraScrollX?: number; // 未设置width的column所需要的宽度
 }
 
 function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
