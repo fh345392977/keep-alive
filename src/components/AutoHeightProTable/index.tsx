@@ -4,6 +4,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useFullscreen } from 'ahooks';
 import { useWindowSize } from 'react-use';
 import { ColumnPropertyConfig } from '@/metadata/meta';
+import useTableCount, { TableCount, TableCountOptionsProps } from '@/hooks/useTableCount';
+import { Badge } from 'antd';
+import { ListToolBarMenuItem } from '@ant-design/pro-table/lib/component/ListToolBar/HeaderMenu';
 import styles from './style.less';
 
 export interface ColumnShow {
@@ -14,7 +17,23 @@ interface Props<T, U extends ParamsType = {}> extends ProTableProps<T, U> {
   dynamicHeight?: number; // 动态计算的额外高度
   columns?: ColumnPropertyConfig<T>[];
   extraScrollX?: number; // 未设置width的column所需要的宽度
+  countOptions?: Pick<TableCountOptionsProps<U>, 'api' | 'paramsFormatter'>; // 角标配置
+  tabs?: ListToolBarMenuItem[]; // 表格tabs数组
 }
+
+const renderBadge = (count: number) => {
+  return (
+    <Badge
+      count={count}
+      style={{
+        marginTop: -4,
+        marginLeft: 4,
+        color: '#999',
+        backgroundColor: '#eee',
+      }}
+    />
+  );
+};
 
 function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
   const {
@@ -26,9 +45,15 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
     columns,
     dynamicHeight,
     extraScrollX = 0,
+    request,
+    countOptions = {},
+    toolbar = {},
+    tabs = [],
     ...rests
   } = props;
   const [collapsed, setCollapsed] = useState(true);
+  const [tab, setTab] = useState<React.Key>('todo');
+  const [tabCount, setTabCount] = useState<TableCount>({});
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [scrollY, setScrollY] = useState<number>(0);
   const [scrollX, setScrollX] = useState<string | number>('100%');
@@ -44,9 +69,8 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
   }
   const [columnsStateMap, setColumnsStateMap] = useState<ColumnShow>(initColumnShow);
   const [isFullscreen, { toggleFull }] = useFullscreen(wrapperRef);
+  const { run } = useTableCount<U>({ ...countOptions, onSuccess: setTabCount });
   const { height } = useWindowSize();
-  console.log('scrollX', scrollX);
-  console.log('columnsStateMap', columnsStateMap);
   useEffect(() => {
     if (columns) {
       let isPercent = false;
@@ -113,6 +137,31 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
         pagination={pagination}
         columnsStateMap={columnsStateMap}
         onColumnsStateChange={(map) => setColumnsStateMap(map)}
+        toolbar={{
+          filter: false,
+          menu: {
+            activeKey: tab,
+            onChange: (activeKey = 'todo') => setTab(activeKey),
+            items: tabs.map((i) => ({
+              key: i.key,
+              label: (
+                <span>
+                  {i.label}
+                  {renderBadge(tabCount[i.key])}
+                </span>
+              ),
+            })),
+          },
+          ...toolbar,
+        }}
+        request={
+          request
+            ? async (params, sort, filter) => {
+                run(params);
+                return request(params, sort, filter);
+              }
+            : undefined
+        }
         options={{
           fullScreen: toggleFull,
           setting: true,
