@@ -36,10 +36,11 @@ export default () => {
           },
         ]}
         params={{ type }}
-        tabParamsFormatter={(tab) => ({ allocate_status: tab })}
-        tabFromSearch={(values) => values?.allocate_status}
+        tabKey="allocate_status"
+        // tabParamsFormatter={(tab) => ({ allocate_status: tab })}
+        // tabFromSearch={(values) => values?.allocate_status}
         columns={columns}
-        setParamsToRoute
+        setParamsToSearch
         rowKey="id"
         extraScrollX={Slice.extraXcrollX}
         actionRef={actionRef}

@@ -1,6 +1,6 @@
 import { Base } from '@/metadata/base';
 import { Column, MetaEnhancedClass } from '@/metadata/utils';
-import { getMomentDay, timeStringEnd, timeStringStart } from '@/utils/date';
+import { timeStringEnd, timeStringStart } from '@/utils/date';
 import moment from 'moment';
 
 @MetaEnhancedClass()
@@ -154,7 +154,7 @@ export default class Slice extends Base {
       },
     },
     fromRoute: (value) => {
-      return [getMomentDay(value?.start_at), getMomentDay(value?.end_at)];
+      return [moment(value?.start_at), moment(value?.end_at)];
     },
   })
   created_at: string = '';

@@ -14,21 +14,23 @@ import { ListToolBarMenuItem } from '@ant-design/pro-table/lib/component/ListToo
 import useScrollX from '@/hooks/useScrollX';
 import useColumnState from '@/hooks/useColumnState';
 import useScrollY from '@/hooks/useScrollY';
-import useInitRouteSearch from '@/hooks/useInitRouteSearch';
 import { useHistory, useLocation } from 'react-router-dom';
+import useInitialValues from '@/hooks/useInitialValues';
+import useInitMenu from '@/hooks/useInitMenu';
 import styles from './style.less';
 
 interface Props<T, U extends ParamsType = {}> extends ProTableProps<T, U> {
-  id: string;
+  id: string; // 表格id，用于做各种缓存
   dynamicHeight?: number; // 动态计算的额外高度
   columns?: ColumnPropertyConfig<T>[];
   extraScrollX?: number; // 未设置width的column所需要的宽度
   countOptions?: TableCountOptionsProps<U>; // 角标配置
   menus?: ListToolBarMenuItem[]; // 表格tabs数组
   defaultMenu?: string; // 默认tab
+  tabKey?: string; // tab 在接口中代表的参数
   tabParamsFormatter?: (tab: React.Key) => ParamsType; // tab的参数转换
-  setParamsToRoute?: boolean;
-  tabFromSearch?: (value: any) => string | undefined;
+  setParamsToSearch?: boolean; // 是否要将参数写入url search
+  tabFromSearch?: (value: any) => string | undefined; // 从 url search 转换出tab
 }
 
 const renderBadge = (count: number) => {
@@ -53,7 +55,7 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
     showHeader = true,
     pagination,
     options,
-    columns,
+    columns = [],
     dynamicHeight,
     extraScrollX = 0,
     request,
@@ -62,9 +64,10 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
     menus = [],
     defaultMenu,
     params = {},
+    tabKey,
     tabParamsFormatter,
     tabFromSearch,
-    setParamsToRoute = false,
+    setParamsToSearch: setParamsToRoute = false,
     form,
     ...rests
   } = props;
@@ -73,13 +76,13 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
   const [tabCount, setTabCount] = useState<TableCount>({});
   const history = useHistory();
   const location = useLocation();
-  const initialValues = useInitRouteSearch(setParamsToRoute, form?.initialValues);
-  let initMenu = defaultMenu ?? menus.first?.key ?? '';
-  if (tabFromSearch) {
-    initMenu = tabFromSearch(initialValues) ?? initMenu;
-  }
-  const [tab, setTab] = useState<React.Key>(initMenu);
+  const initialValues = useInitialValues(setParamsToRoute, form?.initialValues, columns);
+  const initMenu = defaultMenu ?? menus.first?.key ?? '';
+  const [tab, setTab] = useInitMenu(tabKey, tabFromSearch, initialValues, initMenu);
   let tableParams = { ...params };
+  if (tabKey) {
+    tableParams[tabKey] = tab;
+  }
   if (tabParamsFormatter) {
     tableParams = {
       ...tableParams,

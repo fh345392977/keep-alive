@@ -115,7 +115,7 @@ const TableList: React.FC<{}> = () => {
         rowKey="key"
         dynamicHeight={selectedRowsState?.length > 0 ? 99 : 0}
         sticky
-        setParamsToRoute
+        setParamsToSearch
         search={{
           labelWidth: 120,
         }}
