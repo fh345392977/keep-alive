@@ -24,7 +24,7 @@ interface Props<T, U extends ParamsType = {}> extends ProTableProps<T, U> {
   dynamicHeight?: number; // 动态计算的额外高度
   columns?: ColumnPropertyConfig<T>[];
   extraScrollX?: number; // 未设置width的column所需要的宽度
-  countOptions?: TableCountOptionsProps<U>; // 角标配置
+  countOptions?: TableCountOptionsProps; // 角标配置
   menus?: ListToolBarMenuItem[]; // 表格tabs数组
   defaultMenu?: string; // 默认tab
   tabKey?: string; // tab 在接口中代表的参数
@@ -109,7 +109,7 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
     setTabCount(data);
     countOptions?.onLoad?.(data);
   };
-  const { run } = useTableCount<U>({ ...countOptions, onLoad: countOnSuccess });
+  const { run } = useTableCount({ ...countOptions, onLoad: countOnSuccess });
 
   return (
     <div ref={wrapperRef} className={styles.wrapper}>

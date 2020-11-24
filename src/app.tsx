@@ -108,7 +108,7 @@ export const request: RequestConfig = {
   requestInterceptors: [
     (url, options) => {
       const tokenHeader = {
-        Authorization: window.localStorage.getItem('token') ?? '666',
+        Authorization: window.localStorage.getItem('token') ?? '',
       };
       const newHeaders = options.headers
         ? {
