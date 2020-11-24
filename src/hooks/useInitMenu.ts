@@ -10,9 +10,7 @@ export default (
   if (tabKey) {
     initMenu = values[tabKey];
   }
-  if (tabFromSearch) {
-    initMenu = tabFromSearch(values) ?? initMenu;
-  }
+  initMenu = tabFromSearch?.(values) ?? initMenu;
   console.log('initMenu', initMenu);
   return useState<React.Key>(initMenu);
 };

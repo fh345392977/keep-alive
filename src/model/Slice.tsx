@@ -1,6 +1,6 @@
 import { Base } from '@/metadata/base';
 import { Column, MetaEnhancedClass } from '@/metadata/utils';
-import { timeStringEnd, timeStringStart } from '@/utils/date';
+import { getMoment, timeStringEnd, timeStringStart } from '@/utils/date';
 import moment from 'moment';
 
 @MetaEnhancedClass()
@@ -143,18 +143,22 @@ export default class Slice extends Base {
     fieldProps: {
       ranges: {
         今天: [moment(), moment()],
+        昨天: [moment().add(-1, 'day'), moment().add(-1, 'day')],
+        最近七天: [moment().add(-1, 'week'), moment()],
+        最近一月: [moment().add(-1, 'month'), moment()],
+        最近三月: [moment().add(-3, 'month'), moment()],
       },
     },
     search: {
       transform: (value: string[]) => {
         return {
           start_at: timeStringStart(value.first),
-          end_at: timeStringEnd(value.first),
+          end_at: timeStringEnd(value.last),
         };
       },
     },
     fromRoute: (value) => {
-      return [moment(value?.start_at), moment(value?.end_at)];
+      return [getMoment(value?.start_at), getMoment(value?.end_at)];
     },
   })
   created_at: string = '';

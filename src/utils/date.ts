@@ -7,3 +7,7 @@ export const timeStringEnd = (value: string) =>
 
 export const getMomentDay = (value: string) =>
   value ? moment(value).format('YYYY-MM-DD') : undefined;
+
+export const getMoment = (value: string | Date | undefined) => {
+  return value === undefined ? undefined : moment(value);
+};

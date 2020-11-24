@@ -176,9 +176,7 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
                 collapsed,
                 onCollapse: (val) => {
                   setCollapsed(val);
-                  if (search.onCollapse) {
-                    search.onCollapse(val);
-                  }
+                  search.onCollapse?.(val);
                 },
               }
             : search
