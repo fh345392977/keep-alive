@@ -6,7 +6,7 @@ import {
   FormikPropertyConfig,
   TypePropertyConfig,
 } from '@/metadata/meta';
-import { ProColumns, RequestData } from '@ant-design/pro-table';
+import { RequestData } from '@ant-design/pro-table';
 import { request } from 'umi';
 import * as Lodash from 'lodash';
 import { SortOrder } from 'antd/lib/table/interface';
@@ -60,15 +60,15 @@ export function MetaEnhancedClass(): any {
       /**
        * get 指定的字段的 colum
        */
-      static getDesignatedColumn<T>(prop: Extract<keyof T, string>): ProColumns<T> {
-        return EnhancedClass.columnConfig.get(prop) as ProColumns<T>;
+      static getDesignatedColumn<T>(prop: Extract<keyof T, string>): ColumnPropertyConfig<T> {
+        return EnhancedClass.columnConfig.get(prop) as ColumnPropertyConfig<T>;
       }
 
       /**
        * get table colums
        */
-      static getColumns<T>(extra: ColumnMap<T> = new ColumnMap()): ProColumns<T>[] {
-        const list: ProColumns<T>[] = [];
+      static getColumns<T>(extra: ColumnMap<T> = new ColumnMap()): ColumnPropertyConfig<T>[] {
+        const list: ColumnPropertyConfig<T>[] = [];
         EnhancedClass.columnConfig.forEach((config, key) => {
           list.push({
             key,

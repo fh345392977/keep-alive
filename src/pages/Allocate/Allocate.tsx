@@ -37,8 +37,6 @@ export default () => {
         ]}
         params={{ type }}
         tabKey="allocate_status"
-        // tabParamsFormatter={(tab) => ({ allocate_status: tab })}
-        // tabFromSearch={(values) => values?.allocate_status}
         columns={columns}
         setParamsToSearch
         rowKey="id"

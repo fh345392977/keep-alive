@@ -105,4 +105,24 @@ const errorHandler = (error: ResponseError) => {
 
 export const request: RequestConfig = {
   errorHandler,
+  requestInterceptors: [
+    (url, options) => {
+      const tokenHeader = {
+        Authorization: window.localStorage.getItem('token') ?? '666',
+      };
+      const newHeaders = options.headers
+        ? {
+            ...options.headers,
+            ...tokenHeader,
+          }
+        : tokenHeader;
+      return {
+        url,
+        options: {
+          ...options,
+          headers: newHeaders,
+        },
+      };
+    },
+  ],
 };
