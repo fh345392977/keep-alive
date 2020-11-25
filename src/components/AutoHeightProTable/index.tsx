@@ -48,7 +48,7 @@ const renderBadge = (count: number) => {
   );
 };
 
-function AutoHeightProTable<T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, U>) {
+export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, U>) => {
   const {
     id: tableId,
     formRef,
@@ -190,6 +190,4 @@ function AutoHeightProTable<T, U extends ParamsType = {}>(props: AutoHeightProTa
       />
     </div>
   );
-}
-
-export default AutoHeightProTable;
+};
