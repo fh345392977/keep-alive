@@ -1,15 +1,15 @@
 import { useState } from 'react';
 
 export default (
-  tabKey: string | undefined,
-  tabFromSearch: ((value: any) => string | undefined) | undefined,
+  menuKey: string | undefined,
+  menuFromRoute: ((value: any) => string | undefined) | undefined,
   values: any,
   defaultMenu: string,
 ) => {
   let initMenu = defaultMenu;
-  if (tabKey) {
-    initMenu = values[tabKey];
+  if (menuKey) {
+    initMenu = values[menuKey];
   }
-  initMenu = tabFromSearch?.(values) ?? initMenu;
+  initMenu = menuFromRoute?.(values) ?? initMenu;
   return useState<React.Key>(initMenu);
 };

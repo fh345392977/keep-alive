@@ -5,8 +5,6 @@ import moment from 'moment';
 
 @MetaEnhancedClass()
 export default class Slice extends Base {
-  static extraXcrollX = 200;
-
   id: number = 0;
 
   @Column({

@@ -113,9 +113,9 @@ const TableList: React.FC<{}> = () => {
         id="rule-list"
         actionRef={actionRef}
         rowKey="key"
-        dynamicHeight={selectedRowsState?.length > 0 ? 99 : 0}
+        dynamicHeight={selectedRowsState?.length > 0 ? 48 : 0}
         sticky
-        setParamsToSearch
+        setParamsToRoute
         search={{
           labelWidth: 120,
         }}

@@ -10,7 +10,6 @@ import useTableCount, {
   TableCountOptionsProps,
 } from '@/hooks/useTableCount';
 import { Badge } from 'antd';
-import { ListToolBarMenuItem } from '@ant-design/pro-table/lib/component/ListToolBar/HeaderMenu';
 import useScrollX from '@/hooks/useScrollX';
 import useColumnState from '@/hooks/useColumnState';
 import useScrollY from '@/hooks/useScrollY';
@@ -25,13 +24,8 @@ export interface AutoHeightProTableProps<T = any, U extends ParamsType = {}>
   dynamicHeight?: number; // 动态计算的额外高度
   columns?: ColumnPropertyConfig<T>[];
   extraScrollX?: number; // 未设置width的column所需要的宽度
-  countOptions?: TableCountOptionsProps; // 角标配置
-  menus?: ListToolBarMenuItem[]; // 表格tabs数组
-  defaultMenu?: string; // 默认tab
-  tabKey?: string; // tab 在接口中代表的参数
-  tabParamsFormatter?: (tab: React.Key) => ParamsType; // tab的参数转换
-  setParamsToSearch?: boolean; // 是否要将参数写入url search
-  tabFromSearch?: (value: any) => string | undefined; // 从 url search 转换出tab
+  menuOptions?: TableCountOptionsProps; // 角标配置
+  setParamsToRoute?: boolean; // 是否要将参数写入url search
 }
 
 const renderBadge = (count: number) => {
@@ -60,15 +54,10 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
     dynamicHeight,
     extraScrollX = 0,
     request,
-    countOptions = {},
+    menuOptions = {},
     toolbar = {},
-    menus = [],
-    defaultMenu,
     params = {},
-    tabKey,
-    tabParamsFormatter,
-    tabFromSearch,
-    setParamsToSearch: setParamsToRoute = false,
+    setParamsToRoute = false,
     form,
     ...rests
   } = props;
@@ -78,16 +67,21 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
   const history = useHistory();
   const location = useLocation();
   const initialValues = useInitialValues(setParamsToRoute, form?.initialValues, columns);
-  const initMenu = defaultMenu ?? menus.first?.key ?? '';
-  const [tab, setTab] = useInitMenu(tabKey, tabFromSearch, initialValues, initMenu);
+  const initMenu = menuOptions?.defaultMenu ?? menuOptions?.menus?.first?.key ?? '';
+  const [menu, setMenu] = useInitMenu(
+    menuOptions?.menuKey,
+    menuOptions?.menuFromRoute,
+    initialValues,
+    initMenu,
+  );
   let tableParams = { ...params };
-  if (tabKey) {
-    tableParams[tabKey] = tab;
+  if (menuOptions?.menuKey) {
+    tableParams[menuOptions?.menuKey] = menu;
   }
-  if (tabParamsFormatter) {
+  if (menuOptions?.paramsFormatter) {
     tableParams = {
       ...tableParams,
-      ...tabParamsFormatter(tab),
+      ...menuOptions?.paramsFormatter(menu),
     };
   }
   const [columnsStateMap, setColumnsStateMap] = useColumnState(columns, tableId);
@@ -108,9 +102,9 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
 
   const countOnSuccess: onCountSuccessType = (data) => {
     setTabCount(data);
-    countOptions?.onLoad?.(data);
+    menuOptions?.onLoad?.(data);
   };
-  const { run } = useTableCount({ ...countOptions, onLoad: countOnSuccess });
+  const { run } = useTableCount({ ...menuOptions, onLoad: countOnSuccess });
 
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
@@ -131,19 +125,21 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
         }}
         toolbar={{
           filter: false,
-          menu: {
-            activeKey: tab,
-            onChange: (activeKey = initMenu) => setTab(activeKey),
-            items: menus.map((i) => ({
-              key: i.key,
-              label: (
-                <span>
-                  {i.label}
-                  {renderBadge(tabCount[i.key])}
-                </span>
-              ),
-            })),
-          },
+          menu: menuOptions?.menus
+            ? {
+                activeKey: menu,
+                onChange: (activeKey = initMenu) => setMenu(activeKey),
+                items: menuOptions.menus.map((i) => ({
+                  key: i.key,
+                  label: (
+                    <span>
+                      {i.label}
+                      {renderBadge(tabCount[i.key])}
+                    </span>
+                  ),
+                })),
+              }
+            : undefined,
           ...toolbar,
         }}
         request={

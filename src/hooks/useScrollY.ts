@@ -16,10 +16,10 @@ export type useScrollYType = [
   number,
   number | undefined,
 ];
-
+// TODO: 还要计算rowSelection
 export default ([
   wrapperRef,
-  collapsed,
+  formCollapsed,
   formRef,
   showHeader,
   pagination,
@@ -30,34 +30,29 @@ export default ([
   const [scrollY, setScrollY] = useState<number>(0);
   useEffect(() => {
     if (wrapperRef.current) {
-      const headerForm = wrapperRef.current.querySelector('.ant-pro-table-search');
-      const tableHead = wrapperRef.current.querySelector('.ant-table-thead');
-      const tableAction = wrapperRef.current.querySelector('.ant-pro-table-list-toolbar');
-      const wrapperHeight = isFullscreen
-        ? height
-        : wrapperRef.current.getBoundingClientRect().height;
-      let nextScrollY = wrapperHeight;
+      const tableBody = wrapperRef.current.querySelector('.ant-table-body');
+      const wrapperSize = wrapperRef.current.getBoundingClientRect();
+      let nextScrollY = isFullscreen ? height : wrapperSize.height;
       if (dynamicHeight && !Number.isNaN(dynamicHeight)) {
         nextScrollY -= dynamicHeight;
       }
-      if (tableHead) {
-        if (showHeader) {
-          nextScrollY -= tableHead.getBoundingClientRect().height;
-        }
+      if (tableBody) {
+        nextScrollY -= tableBody?.getBoundingClientRect().top - wrapperSize.top;
       }
       if (pagination !== false) {
         nextScrollY -= 56;
       }
-      if (headerForm) {
-        const headerFormMargin = 16;
-        const headerFormHeight = headerForm.getBoundingClientRect().height;
-        nextScrollY -= headerFormMargin + headerFormHeight;
-      }
-      if (tableAction) {
-        nextScrollY -= tableAction.getBoundingClientRect().height;
-      }
       setScrollY(nextScrollY);
     }
-  }, [wrapperRef, collapsed, formRef, showHeader, pagination, isFullscreen, height, dynamicHeight]);
+  }, [
+    wrapperRef,
+    formCollapsed,
+    formRef,
+    showHeader,
+    pagination,
+    isFullscreen,
+    height,
+    dynamicHeight,
+  ]);
   return scrollY;
 };

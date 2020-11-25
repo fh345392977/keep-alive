@@ -11,8 +11,6 @@ export abstract class Base {
   // eslint-disable-next-line @typescript-eslint/no-useless-constructor,@typescript-eslint/no-empty-function
   constructor(data: any = {}) {}
 
-  static extraXcrollX: number = 0;
-
   static getColumns<T>(extra: ColumnMap<T> = new ColumnMap()): ColumnPropertyConfig<T>[] {
     return [];
   }

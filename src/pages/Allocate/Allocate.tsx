@@ -18,29 +18,29 @@ export default () => {
       <AutoHeightProTable<Slice>
         id="allocate"
         request={Slice.getList('/api/list')}
-        countOptions={{
+        menuOptions={{
           api: '/api/list/count',
+          menus: [
+            {
+              key: 'todo',
+              label: '未分配',
+            },
+            {
+              key: 'done',
+              label: '已分配',
+            },
+          ],
+          menuKey: 'allocate_status',
+          defaultMenu: 'todo',
         }}
         toolbar={{
           actions: [<Button key="allocate">分配</Button>],
         }}
-        defaultMenu="todo"
-        menus={[
-          {
-            key: 'todo',
-            label: '未分配',
-          },
-          {
-            key: 'done',
-            label: '已分配',
-          },
-        ]}
         params={{ type }}
-        tabKey="allocate_status"
         columns={columns}
-        setParamsToSearch
+        setParamsToRoute
         rowKey="id"
-        extraScrollX={Slice.extraXcrollX}
+        extraScrollX={200}
         actionRef={actionRef}
       />
     </div>
