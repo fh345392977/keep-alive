@@ -1,4 +1,5 @@
-import { ProColumns } from '@ant-design/pro-table';
+import { ParamsType } from '@ant-design/pro-provider';
+import { ProColumns, ProTableProps } from '@ant-design/pro-table';
 
 export function CreateProperDecoratorF<T>() {
   const metaKey = Symbol('metaKey');
@@ -24,6 +25,10 @@ export type CustomColumnPropertyConfig<T = any> = {
 export type ColumnPropertyConfig<T = any> = Partial<ProColumns<T> & CustomColumnPropertyConfig<T>>;
 
 export class ColumnMap<T> extends Map<Extract<keyof T, string>, Partial<ProColumns<T>>> {}
+
+export type TablePropertyConfig<T = any, U extends ParamsType = {}> = {
+  tableProps: ProTableProps<T, U>;
+};
 
 export interface FormikPropertyConfig {
   validationSchema?: any;

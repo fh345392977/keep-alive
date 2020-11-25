@@ -11,6 +11,5 @@ export default (
     initMenu = values[tabKey];
   }
   initMenu = tabFromSearch?.(values) ?? initMenu;
-  console.log('initMenu', initMenu);
   return useState<React.Key>(initMenu);
 };

@@ -19,7 +19,8 @@ import useInitialValues from '@/hooks/useInitialValues';
 import useInitMenu from '@/hooks/useInitMenu';
 import styles from './style.less';
 
-interface Props<T, U extends ParamsType = {}> extends ProTableProps<T, U> {
+export interface AutoHeightProTableProps<T = any, U extends ParamsType = {}>
+  extends ProTableProps<T, U> {
   id: string; // 表格id，用于做各种缓存
   dynamicHeight?: number; // 动态计算的额外高度
   columns?: ColumnPropertyConfig<T>[];
@@ -47,7 +48,7 @@ const renderBadge = (count: number) => {
   );
 };
 
-function AutoHeightProTable<T, U extends ParamsType = {}>(props: Props<T, U>) {
+function AutoHeightProTable<T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, U>) {
   const {
     id: tableId,
     formRef,
