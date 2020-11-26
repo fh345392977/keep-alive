@@ -16,16 +16,40 @@ import useScrollY from '@/hooks/useScrollY';
 import { useHistory, useLocation } from 'react-router-dom';
 import useInitialValues from '@/hooks/useInitialValues';
 import useMenu from '@/hooks/useMenu';
+import { GetRowKey } from 'antd/lib/table/interface';
 import styles from './style.less';
 
 export interface AutoHeightProTableProps<T = any, U extends ParamsType = {}>
   extends ProTableProps<T, U> {
-  id: string; // 表格id，用于做各种缓存
-  dynamicHeight?: number; // 动态计算的额外高度
+  /**
+   * 表格id，用于做各种缓存
+   */
+  id: string;
+
+  /**
+   * 动态计算的额外高度
+   */
+  dynamicHeight?: number;
+
+  /**
+   * 列
+   */
   columns?: ColumnPropertyConfig<T>[];
-  extraScrollX?: number; // 未设置width的column所需要的宽度
-  menuOptions?: TableCountOptionsProps; // 角标配置
-  setParamsToRoute?: boolean; // 是否要将参数写入url search
+
+  /**
+   * 未设置width的column所需要的宽度
+   */
+  extraScrollX?: number;
+
+  /**
+   * 角标配置
+   */
+  menuOptions?: TableCountOptionsProps;
+
+  /**
+   * 是否要将参数写入url search
+   */
+  setParamsToRoute?: boolean;
 }
 
 const renderBadge = (count: number) => {
@@ -59,6 +83,7 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
     setParamsToRoute = false,
     form,
     rowSelection,
+    onRow,
     ...rests
   } = props;
   const [collapsed, setCollapsed] = useState(true);
@@ -104,6 +129,22 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
     menuOptions?.onLoad?.(data);
   };
   const { run } = useTableCount({ ...menuOptions, onLoad: countOnSuccess });
+
+  function onRowClick(
+    record: T,
+    index: number | undefined,
+    rowKey: string | GetRowKey<T> | undefined,
+    event: any,
+  ) {
+    if (rowKey && !(event.target as any).className.split(' ').contains('ant-checkbox-wrapper')) {
+      const _rowKey = typeof rowKey === 'string' ? record[rowKey] : rowKey(record, index);
+      if (selectedRowKeys.contains(_rowKey)) {
+        setSelectedRowKeys(selectedRowKeys.remove(_rowKey));
+      } else {
+        setSelectedRowKeys([...selectedRowKeys, _rowKey]);
+      }
+    }
+  }
 
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
@@ -172,7 +213,6 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
           reload: true,
           density: true,
         }}
-        {...rests}
         search={
           search
             ? {
@@ -190,6 +230,26 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
           y: scrollY,
           x: scrollX,
         }}
+        onRow={(record, index) => {
+          return onRow
+            ? {
+                ...onRow(record, index),
+                onClick: rowSelection
+                  ? (e) => {
+                      onRowClick(record, index, rests.rowKey, e);
+                      onRow(record, index).onClick?.(e);
+                    }
+                  : onRow(record, index).onClick,
+              }
+            : {
+                onClick: rowSelection
+                  ? (e) => {
+                      onRowClick(record, index, rests.rowKey, e);
+                    }
+                  : undefined,
+              };
+        }}
+        {...rests}
       />
     </div>
   );

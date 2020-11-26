@@ -96,7 +96,8 @@ const TableList: React.FC<{}> = () => {
       render: (_, record) => (
         <>
           <a
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               handleUpdateModalVisible(true);
               setStepFormValues(record);
             }}
