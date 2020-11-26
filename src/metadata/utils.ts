@@ -33,10 +33,21 @@ function getConfigMap<T>(F: any, cachekey: symbol, metaKey: symbol): Map<string,
 }
 
 const typeConfig = CreateProperDecoratorF<TypePropertyConfig>();
+/**
+ * 用于声明数据转换方式
+ */
 export const Type = typeConfig.properDecoratorF;
+
 const columnConfig = CreateProperDecoratorF<ColumnPropertyConfig>();
+/**
+ * 用于声明该属性Column配置
+ */
 export const Column = columnConfig.properDecoratorF;
+
 const formikItemConfig = CreateProperDecoratorF<FormikPropertyConfig>();
+/**
+ * 用于声明该属性的表单配置
+ */
 export const FormikItem = formikItemConfig.properDecoratorF;
 
 export function MetaEnhancedClass(): any {
@@ -46,9 +57,6 @@ export function MetaEnhancedClass(): any {
     return class EnhancedClass extends Target {
       [cacheColumnConfigKey]: Map<string, ColumnPropertyConfig> | null;
 
-      /**
-       * table column config
-       */
       static get columnConfig(): Map<string, ColumnPropertyConfig> {
         return getConfigMap<ColumnPropertyConfig>(
           EnhancedClass,
@@ -57,16 +65,10 @@ export function MetaEnhancedClass(): any {
         );
       }
 
-      /**
-       * get 指定的字段的 colum
-       */
       static getDesignatedColumn<T>(prop: Extract<keyof T, string>): ColumnPropertyConfig<T> {
         return EnhancedClass.columnConfig.get(prop) as ColumnPropertyConfig<T>;
       }
 
-      /**
-       * get table colums
-       */
       static getColumns<T>(extra: ColumnMap<T> = new ColumnMap()): ColumnPropertyConfig<T>[] {
         const list: ColumnPropertyConfig<T>[] = [];
         EnhancedClass.columnConfig.forEach((config, key) => {

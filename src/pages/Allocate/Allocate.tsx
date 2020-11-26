@@ -1,7 +1,6 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import AutoHeightProTable from '@/components/AutoHeightProTable';
 import Slice from '@/model/Slice';
-import { ActionType } from '@ant-design/pro-table';
 import { Button } from 'antd';
 import { useParams } from 'umi';
 
@@ -11,7 +10,6 @@ export interface AllocateRouteParams {
 
 export default () => {
   const columns = Slice.getColumns<Slice>();
-  const actionRef = useRef<ActionType>();
   const { type } = useParams<AllocateRouteParams>();
   return (
     <div className="full-contain">
@@ -41,7 +39,6 @@ export default () => {
         setParamsToRoute
         rowKey="id"
         extraScrollX={200}
-        actionRef={actionRef}
       />
     </div>
   );

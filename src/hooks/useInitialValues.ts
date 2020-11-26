@@ -20,8 +20,8 @@ export default (
       }
     });
     columns.forEach((i) => {
-      if (i.fromRoute && (i.fieldKey || typeof i.dataIndex === 'string')) {
-        _initialValues![i.fieldKey ?? (i.dataIndex as string)] = i.fromRoute(urlParams);
+      if (i.fromQuery && (i.fieldKey || typeof i.dataIndex === 'string')) {
+        _initialValues![i.fieldKey ?? (i.dataIndex as string)] = i.fromQuery(urlParams);
       }
     });
   }

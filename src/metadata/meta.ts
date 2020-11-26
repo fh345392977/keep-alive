@@ -18,9 +18,20 @@ export interface TypePropertyConfig {
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type CustomColumnPropertyConfig<T = any> = {
-  show: boolean; // 列默认是否显示，如需默认隐藏，请设置为false
-  fromRoute: (value: any) => any; // 表单值通过route转化
-  fieldKey: string; // 表单key,一般用于dataIndex为深层取值时
+  /**
+   * 列默认是否显示，如需默认隐藏，请设置为false
+   */
+  show: boolean;
+
+  /**
+   * 表单值通过route query转化
+   */
+  fromQuery: (value: any) => any;
+
+  /**
+   * 表单key,一般用于dataIndex为深层取值时
+   */
+  fieldKey: string;
 };
 export type ColumnPropertyConfig<T = any> = Partial<ProColumns<T> & CustomColumnPropertyConfig<T>>;
 

@@ -1,31 +1,24 @@
-import { FormInstance } from 'antd/lib/form';
 import { TablePaginationConfig } from 'antd/lib/table';
 import { useEffect, useState } from 'react';
 
 export type useScrollYType = [
   React.RefObject<HTMLDivElement>,
   boolean,
-  (
-    | React.MutableRefObject<FormInstance | undefined>
-    | ((actionRef: FormInstance) => void)
-    | undefined
-  ),
-  boolean,
   false | TablePaginationConfig | undefined,
   boolean,
   number,
   number | undefined,
+  Array<string | number>,
 ];
 // TODO: 还要计算rowSelection
 export default ([
   wrapperRef,
   formCollapsed,
-  formRef,
-  showHeader,
   pagination,
   isFullscreen,
   height,
   dynamicHeight,
+  selectedRowKeys,
 ]: useScrollYType) => {
   const [scrollY, setScrollY] = useState<number>(0);
   useEffect(() => {
@@ -44,15 +37,6 @@ export default ([
       }
       setScrollY(nextScrollY);
     }
-  }, [
-    wrapperRef,
-    formCollapsed,
-    formRef,
-    showHeader,
-    pagination,
-    isFullscreen,
-    height,
-    dynamicHeight,
-  ]);
+  }, [wrapperRef, formCollapsed, pagination, isFullscreen, height, dynamicHeight, selectedRowKeys]);
   return scrollY;
 };

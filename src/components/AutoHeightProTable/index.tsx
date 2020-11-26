@@ -15,7 +15,7 @@ import useColumnState from '@/hooks/useColumnState';
 import useScrollY from '@/hooks/useScrollY';
 import { useHistory, useLocation } from 'react-router-dom';
 import useInitialValues from '@/hooks/useInitialValues';
-import useInitMenu from '@/hooks/useInitMenu';
+import useMenu from '@/hooks/useMenu';
 import styles from './style.less';
 
 export interface AutoHeightProTableProps<T = any, U extends ParamsType = {}>
@@ -47,7 +47,6 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
     id: tableId,
     formRef,
     search,
-    showHeader = true,
     pagination,
     options,
     columns = [],
@@ -59,16 +58,17 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
     params = {},
     setParamsToRoute = false,
     form,
+    rowSelection,
     ...rests
   } = props;
   const [collapsed, setCollapsed] = useState(true);
-  // 每次初始化时的默认menu，后续很可能跟在route后，做到参数的缓存
   const [tabCount, setTabCount] = useState<TableCount>({});
+  const [selectedRowKeys, setSelectedRowKeys] = useState<Array<string | number>>([]);
   const history = useHistory();
   const location = useLocation();
   const initialValues = useInitialValues(setParamsToRoute, form?.initialValues, columns);
   const initMenu = menuOptions?.defaultMenu ?? menuOptions?.menus?.first?.key ?? '';
-  const [menu, setMenu] = useInitMenu(
+  const [menu, setMenu] = useMenu(
     menuOptions?.menuKey,
     menuOptions?.menuFromRoute,
     initialValues,
@@ -92,12 +92,11 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
   const scrollY = useScrollY([
     wrapperRef,
     collapsed,
-    formRef,
-    showHeader,
     pagination,
     isFullscreen,
     height,
     dynamicHeight,
+    selectedRowKeys,
   ]);
 
   const countOnSuccess: onCountSuccessType = (data) => {
@@ -111,14 +110,10 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
       <ProTable<T, U>
         formRef={formRef}
         columns={columns}
-        showHeader={showHeader}
         pagination={pagination}
         columnsStateMap={columnsStateMap}
         onColumnsStateChange={setColumnsStateMap}
         params={tableParams as U}
-        onLoad={(data) => {
-          console.log('onLoad', data);
-        }}
         form={{
           initialValues,
           ...form,
@@ -156,6 +151,18 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
                 }
                 run(finalParams);
                 return request(finalParams, sort, filter);
+              }
+            : undefined
+        }
+        rowSelection={
+          rowSelection
+            ? {
+                ...rowSelection,
+                selectedRowKeys,
+                onChange: (keys, rows) => {
+                  setSelectedRowKeys(keys);
+                  rowSelection.onChange?.(keys, rows);
+                },
               }
             : undefined
         }

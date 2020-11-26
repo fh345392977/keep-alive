@@ -4,7 +4,13 @@ import { getMoment, timeStringEnd, timeStringStart } from '@/utils/date';
 import moment from 'moment';
 
 @MetaEnhancedClass()
+/**
+ * 切片
+ */
 export default class Slice extends Base {
+  /**
+   * 切片id
+   */
   id: number = 0;
 
   @Column({
@@ -13,6 +19,9 @@ export default class Slice extends Base {
     fixed: true,
     width: 150,
   })
+  /**
+   * 切片名称
+   */
   name: string = '';
 
   @Column({
@@ -20,6 +29,9 @@ export default class Slice extends Base {
     dataIndex: 'pathology_number',
     width: 160,
   })
+  /**
+   * 病理号
+   */
   pathology_number: string = '';
 
   @Column({
@@ -29,6 +41,9 @@ export default class Slice extends Base {
     hideInForm: true,
     width: 100,
   })
+  /**
+   * 目录ID
+   */
   directory_id: string = '';
 
   @Column({
@@ -37,6 +52,9 @@ export default class Slice extends Base {
     show: false,
     width: 100,
   })
+  /**
+   * 切片类型
+   */
   category_id: string = '';
 
   @Column({
@@ -44,6 +62,9 @@ export default class Slice extends Base {
     dataIndex: 'path',
     width: 140,
   })
+  /**
+   * 切片路径
+   */
   path: string = '';
 
   @Column({
@@ -52,6 +73,9 @@ export default class Slice extends Base {
     show: false,
     width: 100,
   })
+  /**
+   * md5值
+   */
   md5: string = '';
 
   @Column({
@@ -59,6 +83,9 @@ export default class Slice extends Base {
     dataIndex: 'status',
     width: 100,
   })
+  /**
+   * status
+   */
   status: number = 100;
 
   @Column({
@@ -66,6 +93,9 @@ export default class Slice extends Base {
     dataIndex: 'hospital_name',
     width: 150,
   })
+  /**
+   * 医院名称
+   */
   hospital_name: string = '';
 
   @Column({
@@ -73,6 +103,9 @@ export default class Slice extends Base {
     dataIndex: 'specimen_type',
     width: 100,
   })
+  /**
+   * 标本类型
+   */
   specimen_type: string = '';
 
   @Column({
@@ -80,14 +113,23 @@ export default class Slice extends Base {
     dataIndex: 'specimen_position',
     width: 120,
   })
+  /**
+   * 标本部位
+   */
   specimen_position: string = '';
 
+  /**
+   * 诊断类型
+   */
   diagnostic_class: number = 0;
 
   @Column({
     title: '描述信息',
     dataIndex: 'description',
   })
+  /**
+   * 描述信息
+   */
   description: string = '';
 
   @Column({
@@ -95,6 +137,9 @@ export default class Slice extends Base {
     dataIndex: 'label_count',
     width: 120,
   })
+  /**
+   * 标注数量
+   */
   label_count: number = 0;
 
   @Column({
@@ -102,6 +147,9 @@ export default class Slice extends Base {
     dataIndex: 'disabled',
     width: 100,
   })
+  /**
+   * 可用状态
+   */
   disabled: number = 0;
 
   @Column({
@@ -110,6 +158,9 @@ export default class Slice extends Base {
     dataIndex: 'clinical_information',
     width: 200,
   })
+  /**
+   * 临床信息
+   */
   clinical_information: string = '';
 
   @Column({
@@ -131,6 +182,9 @@ export default class Slice extends Base {
       },
     },
   })
+  /**
+   * 训练集或测试集
+   */
   training_or_test: number = 0;
 
   @Column({
@@ -155,9 +209,12 @@ export default class Slice extends Base {
         };
       },
     },
-    fromRoute: (value) => {
+    fromQuery: (value) => {
       return [getMoment(value?.start_at), getMoment(value?.end_at)];
     },
   })
+  /**
+   * 创建时间，即入库时间
+   */
   created_at: string = '';
 }

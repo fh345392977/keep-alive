@@ -6,10 +6,13 @@ export default class Persmission extends Base {
   id: number = 0;
 
   @Column({
-    title: '切片名称',
+    title: '描述',
     dataIndex: 'description',
     fixed: true,
   })
+  /**
+   * 描述
+   */
   description: string = '';
 
   @Column({

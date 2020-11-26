@@ -119,6 +119,14 @@ const TableList: React.FC<{}> = () => {
         search={{
           labelWidth: 120,
         }}
+        tableAlertRender={({ selectedRowKeys, onCleanSelected }) => (
+          <span>
+            已选 {selectedRowKeys.length} 项
+            <a style={{ marginLeft: 8 }} onClick={onCleanSelected}>
+              取消选择
+            </a>
+          </span>
+        )}
         toolBarRender={() => [
           <Button key="create" type="primary" onClick={() => handleModalVisible(true)}>
             <PlusOutlined /> 新建
