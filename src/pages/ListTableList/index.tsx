@@ -6,7 +6,7 @@ import { Button, Drawer, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import AutoHeightProTable from '@/components/AutoHeightProTable';
 import { ColumnMap, ColumnPropertyConfig } from '@/metadata/meta';
-import RuleLog from '@/model/RuleLog';
+import RuleLog from '@/metadata/RuleLog';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
 import { addRule, queryRule, removeRule, updateRule } from './service';

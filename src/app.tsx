@@ -23,7 +23,6 @@ export async function getInitialState(): Promise<{
   };
   // 如果是登录页面，不执行
   // 每次刷新会从这里重新获取用户信息
-  // 也可以再加上权限获取，虽然觉得可以放在一个接口
   if (history.location.pathname !== '/user/login') {
     const currentUser = await fetchUserInfo();
     return {

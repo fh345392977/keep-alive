@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import AutoHeightProTable from '@/components/AutoHeightProTable';
-import Slice from '@/model/Slice';
+import Slice from '@/metadata/Slice';
 import { Button, Modal, Space } from 'antd';
-import { useParams } from 'umi';
+import { useModel, useParams } from 'umi';
 import ProForm, { ProFormSelect, ProFormSwitch } from '@ant-design/pro-form';
 import { FormInstance } from 'antd/lib/form';
 import { assignTo } from './service';
@@ -20,6 +20,8 @@ export default () => {
     setAllocateVIsible(false);
     if (allocateFormRef) allocateFormRef?.current?.resetFields();
   }
+  const { users } = useModel('users');
+  console.log('users', users);
   return (
     <>
       <AutoHeightProTable<Slice>
