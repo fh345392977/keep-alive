@@ -68,6 +68,7 @@
     "react-use": "^15.3.4",
     "reflect-metadata": "^0.1.13",
     "umi": "^3.2.14",
+    "umi-plugin-keep-alive": "^0.0.1-beta.18",
     "umi-request": "^1.0.8",
     "use-merge-value": "^1.0.1",
     "yup": "^0.30.0"

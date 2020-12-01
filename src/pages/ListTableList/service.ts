@@ -1,5 +1,5 @@
 import { request } from 'umi';
-import RuleLog from '@/metadata/RuleLog';
+import RuleLog from '@/model/RuleLog';
 
 interface TableListParams {
   status?: string;

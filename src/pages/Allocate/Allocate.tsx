@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import AutoHeightProTable from '@/components/AutoHeightProTable';
-import Slice from '@/metadata/Slice';
+import Slice from '@/model/Slice';
 import { Button, Modal, Space } from 'antd';
 import { useModel, useParams } from 'umi';
 import ProForm, { ProFormSelect, ProFormSwitch } from '@ant-design/pro-form';
@@ -21,7 +21,6 @@ export default () => {
     if (allocateFormRef) allocateFormRef?.current?.resetFields();
   }
   const { users } = useModel('users');
-  console.log('users', users);
   return (
     <>
       <AutoHeightProTable<Slice>
@@ -71,6 +70,7 @@ export default () => {
               pre_generator: values.pre_generator ? 1 : 0,
               assign_to: values.assign_to,
             });
+            closeModal();
           }}
           initialValues={{
             pre_generator: false,
@@ -93,10 +93,10 @@ export default () => {
             name="assign_to"
             label="分配给"
             hasFeedback
-            valueEnum={{
-              1: '超管',
-              2: '标注',
-            }}
+            options={users.map((i) => ({
+              label: i.name,
+              value: i.key,
+            }))}
             rules={[{ required: true, message: '请选择人员' }]}
           />
           <ProFormSwitch name="pre_generator" label="是否需要预生成大框" />
