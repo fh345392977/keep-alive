@@ -69,7 +69,6 @@ const renderBadge = (count: number) => {
 export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, U>) => {
   const {
     id: tableId,
-    formRef,
     search,
     pagination,
     options,
@@ -114,15 +113,15 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
   const [isFullscreen, { toggleFull }] = useFullscreen(wrapperRef);
   const { height } = useWindowSize();
   const scrollX = useScrollX([columns, columnsStateMap, extraScrollX]);
-  const scrollY = useScrollY([
+  const scrollY = useScrollY({
     wrapperRef,
-    collapsed,
+    formCollapsed: collapsed,
     pagination,
     isFullscreen,
     height,
     dynamicHeight,
     selectedRowKeys,
-  ]);
+  });
 
   const countOnSuccess: onCountSuccessType = (data) => {
     setTabCount(data);
@@ -149,7 +148,6 @@ export default <T, U extends ParamsType = {}>(props: AutoHeightProTableProps<T, 
   return (
     <div ref={wrapperRef} className={styles.wrapper}>
       <ProTable<T, U>
-        formRef={formRef}
         columns={columns}
         pagination={pagination}
         columnsStateMap={columnsStateMap}

@@ -36,3 +36,15 @@ declare let ga: Function;
 declare let ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: 'site' | undefined;
 
 declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
+
+// interface KeepAliveProps {
+//   children: ReactNode | ReactNodeArray
+//   name?: string
+//   title?: string
+//   id?: string
+//   when?: boolean | Array<boolean> | (() => boolean | Array<boolean>)
+//   saveScrollPosition?: boolean | 'screen'
+// }
+
+// // eslint-disable-next-line react/prefer-stateless-function
+// export declare class KeepAlive extends Component<KeepAliveProps> {}

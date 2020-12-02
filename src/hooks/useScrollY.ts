@@ -1,17 +1,18 @@
 import { TablePaginationConfig } from 'antd/lib/table';
 import { useEffect, useState } from 'react';
+import { useAliveController } from 'umi';
 
-export type useScrollYType = [
-  React.RefObject<HTMLDivElement>,
-  boolean,
-  false | TablePaginationConfig | undefined,
-  boolean,
-  number,
-  number | undefined,
-  Array<string | number>,
-];
+export type useScrollYType = {
+  wrapperRef: React.RefObject<HTMLDivElement>;
+  formCollapsed: boolean;
+  pagination: false | TablePaginationConfig | undefined;
+  isFullscreen: boolean;
+  height: number;
+  dynamicHeight: number | undefined;
+  selectedRowKeys: Array<string | number>;
+};
 // TODO: 还要计算rowSelection
-export default ([
+export default ({
   wrapperRef,
   formCollapsed,
   pagination,
@@ -19,8 +20,10 @@ export default ([
   height,
   dynamicHeight,
   selectedRowKeys,
-]: useScrollYType) => {
+}: useScrollYType) => {
   const [scrollY, setScrollY] = useState<number>(0);
+  const { getCachingNodes } = useAliveController();
+  const cachingNodes = getCachingNodes();
   useEffect(() => {
     if (wrapperRef.current) {
       const tableBody = wrapperRef.current.querySelector('.ant-table-body');
@@ -35,8 +38,18 @@ export default ([
       if (pagination !== false) {
         nextScrollY -= 56;
       }
+      console.log('nextScrollY', nextScrollY);
       setScrollY(nextScrollY);
     }
-  }, [wrapperRef, formCollapsed, pagination, isFullscreen, height, dynamicHeight, selectedRowKeys]);
+  }, [
+    wrapperRef,
+    formCollapsed,
+    pagination,
+    isFullscreen,
+    height,
+    dynamicHeight,
+    selectedRowKeys,
+    cachingNodes,
+  ]);
   return scrollY;
 };

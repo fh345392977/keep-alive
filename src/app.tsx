@@ -5,6 +5,7 @@ import React from 'react';
 import { history, RequestConfig } from 'umi';
 import { ResponseError } from 'umi-request';
 import defaultSettings from '../config/defaultSettings';
+import KeepAliveTabs from './components/KeepAliveTabs';
 import { queryCurrent } from './services/user';
 
 export async function getInitialState(): Promise<{
@@ -45,6 +46,7 @@ export const layout = ({
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
+    headerRender: () => <KeepAliveTabs />,
     onPageChange: () => {
       const { currentUser } = initialState;
       const { location } = history;
