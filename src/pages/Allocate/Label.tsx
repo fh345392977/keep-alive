@@ -5,7 +5,7 @@ import { KeepAlive } from 'umi';
 export default () => {
   // @ts-ignore
   return (
-    <KeepAlive name="/allocate/label" title="标注分配">
+    <KeepAlive title="标注分配" name="/allocate/label">
       <Allocate />
     </KeepAlive>
   );

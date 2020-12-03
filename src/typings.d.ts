@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { KeepAliveProps } from 'umi';
+
 declare module 'slash2';
 declare module '*.css';
 declare module '*.less';
@@ -37,14 +40,8 @@ declare let ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: 'site' | undefine
 
 declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
 
-// interface KeepAliveProps {
-//   children: ReactNode | ReactNodeArray
-//   name?: string
-//   title?: string
-//   id?: string
-//   when?: boolean | Array<boolean> | (() => boolean | Array<boolean>)
-//   saveScrollPosition?: boolean | 'screen'
-// }
-
-// // eslint-disable-next-line react/prefer-stateless-function
-// export declare class KeepAlive extends Component<KeepAliveProps> {}
+declare module 'react-activation' {
+  export interface KeepAliveProps {
+    title?: string;
+  }
+}
