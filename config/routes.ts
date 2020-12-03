@@ -154,7 +154,7 @@ const routes: IRoute[] = [
   },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/allocate/label',
   },
   {
     component: './404',
