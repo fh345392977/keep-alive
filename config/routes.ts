@@ -23,16 +23,16 @@ const routes: IRoute[] = [
     name: 'allocate',
     icon: 'smile',
     routes: [
-      {
-        path: '/allocate/:type',
-        name: 'allocate-label',
-        component: './Allocate/Allocate',
-        hideInMenu: true,
-      },
+      // {
+      //   path: '/allocate/:type',
+      //   name: 'allocate-label',
+      //   component: './Allocate/Allocate',
+      //   hideInMenu: true,
+      // },
       {
         path: '/allocate/label',
         name: 'allocate-label',
-        component: './Allocate/Allocate',
+        component: './Allocate/Label',
       },
       {
         path: '/allocate/review',
